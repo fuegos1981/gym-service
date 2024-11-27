@@ -7,10 +7,14 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: untitled1-route
-          uri: lb://untitled1
+        - id: gym-crm-service-route
+          uri: lb://gym-crm-service
           predicates:
-            - Path=/api/untitled1/**
+             - Path=/api/v1/gym-crm-service/**
+        - id: training-hours-tracker-route
+          uri: lb://training-hours-tracker
+          predicates:
+            - Path=/api/v1/training-hours-tracker/**
 eureka:
   client:
     service-url:

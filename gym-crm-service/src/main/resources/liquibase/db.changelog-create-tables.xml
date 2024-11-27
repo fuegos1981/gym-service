@@ -1,0 +1,173 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="GSC-1 addUserTable" author="Olena.Sinkevych">
+        <createTable tableName="user">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="isActive" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="GSC-1 addTraineeTable" author="Olena.Sinkevych">
+        <createTable tableName="trainee">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="date_of_birth" type="DATETIME">
+                <constraints nullable="true"/>
+            </column>
+            <column name="address" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="trainee"
+                baseColumnNames="user_id"
+                constraintName="fk_trainee_user"
+                referencedTableName="user"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="GSC-1 addTrainingType" author="Olena.Sinkevych">
+        <createTable tableName="training_type">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="GSC-1 addTrainerTable" author="Olena.Sinkevych">
+        <createTable tableName="trainer">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="specialization_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="trainer"
+                baseColumnNames="user_id"
+                constraintName="fk_trainer_user"
+                referencedTableName="user"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"/>
+        <addForeignKeyConstraint
+                baseTableName="trainer"
+                baseColumnNames="specialization_id"
+                constraintName="fk_trainer_training_type"
+                referencedTableName="training_type"
+                referencedColumnNames="id"
+                onDelete="NO ACTION"
+                onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="GSC-1 addTrainingTable" author="Olena.Sinkevych">
+        <createTable tableName="training">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="trainee_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trainer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="training_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="training"
+                baseColumnNames="trainee_id"
+                constraintName="fk_training_trainee"
+                referencedTableName="trainee"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"/>
+        <addForeignKeyConstraint
+                baseTableName="training"
+                baseColumnNames="trainer_id"
+                constraintName="fk_training_trainer"
+                referencedTableName="trainer"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="GSC-1 addTraineeTrainerJoinTable" author="Olena.Sinkevych">
+        <createTable tableName="trainee2trainer">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="trainee_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="trainer_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="GSC-1 addForeignKeyConstraintTraineeTrainerTable" author="Olena.Sinkevych">
+        <addForeignKeyConstraint
+                baseTableName="trainee2trainer"
+                baseColumnNames="trainee_id"
+                constraintName="fk_trainee2trainer_trainee"
+                referencedTableName="trainee"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"/>
+        <addForeignKeyConstraint
+                baseTableName="trainee2trainer"
+                baseColumnNames="trainer_id"
+                constraintName="fk_trainee2trainer_trainer"
+                referencedTableName="trainer"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>
