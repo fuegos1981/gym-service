@@ -30,6 +30,7 @@ public class TrainerWorkload {
 
     @Column(nullable = false)
     private String lastName;
+
     @Column(nullable = false)
     private Boolean isActive;
 

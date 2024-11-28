@@ -1,11 +1,14 @@
 server:
   port: 8080
+  max-http-header-size: 65536
 
 spring:
   application:
     name: api-gateway
   cloud:
     gateway:
+      httpclient:
+        maxHeaderSize: 65536
       routes:
         - id: gym-crm-service-route
           uri: lb://gym-crm-service
@@ -15,6 +18,10 @@ spring:
           uri: lb://training-hours-tracker
           predicates:
             - Path=/api/v1/training-hours-tracker/**
+        - id: actuator-route
+          uri: http://localhost:8080
+          predicates:
+            - Path=/actuator/**
 eureka:
   client:
     service-url:

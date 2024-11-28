@@ -24,7 +24,6 @@ class TrainerMapperTest {
 
     private static final TrainerMapper mapper = new TrainerMapper();
 
-
     @Test
     void checkIfToGetTrainersResponseInnerIsCorrect() {
         GetTrainersResponseInner actual = mapper.toGetTrainersResponseInner(TRAINER);

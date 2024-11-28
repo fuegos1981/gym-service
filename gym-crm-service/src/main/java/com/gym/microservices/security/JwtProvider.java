@@ -43,11 +43,11 @@ public class JwtProvider implements Serializable {
     }
 
     private Claims extractAllClaims(String token) {
-            return Jwts.parser()
-                    .verifyWith(getSigningKey())
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     private Boolean isTokenExpired(String token) {

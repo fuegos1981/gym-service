@@ -30,9 +30,6 @@ import com.gym.microservices.service.TraineeService;
 import com.gym.microservices.service.TrainerService;
 import com.gym.microservices.service.TrainingService;
 import com.gym.microservices.specification.SearchCriteria;
-import com.gym.microservices.service.TraineeService;
-import com.gym.microservices.service.TrainerService;
-import com.gym.microservices.service.TrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

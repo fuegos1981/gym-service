@@ -6,7 +6,6 @@
     <modules>
         <module>discovery-server</module>
 		<module>gateway</module>
-		<module>discovery-server</module>
 		<module>training-hours-tracker</module>
 		<module>gym-crm-service</module>
 	</modules>

@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface TrainerWorkloadRepository extends JpaRepository<TrainerWorkload, Long> {
     List<TrainerWorkload> findByUsernameOrderByTrainingDateAsc(String username);
+
     List<TrainerWorkload> findByUsernameAndTrainingDateAndTrainingDuration(String username, LocalDate trainingDate, int Duration);
 }

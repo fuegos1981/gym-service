@@ -23,7 +23,7 @@ springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
-    path: /api/v1/swagger-ui.html
+    path: /api/v1/gym-crm-service/swagger-ui.html
 eureka:
   client:
     service-url:
@@ -61,7 +61,7 @@ scrape_configs:
   - job_name: 'spring-boot'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'localhost:8084' ]
+      - targets: [ 'localhost:8080' ]
 app:
   root:
     url: http://localhost:8080

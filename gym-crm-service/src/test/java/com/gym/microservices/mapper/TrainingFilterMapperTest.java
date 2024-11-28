@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TrainingFilterMapperTest {
@@ -18,9 +17,9 @@ class TrainingFilterMapperTest {
     void checkIfGetSearchCrittersForTrainingIsWork() {
         TrainingFilter filter = new TrainingFilter()
                 .traineeName("Ivan.Petrov")
-                .periodTo(LocalDate.of(2024,12,12)).periodFrom(null);
+                .periodTo(LocalDate.of(2024, 12, 12)).periodFrom(null);
 
-        List<SearchCriteria> actual =  mapper.getSearchCrittersForTraining(filter);
+        List<SearchCriteria> actual = mapper.getSearchCrittersForTraining(filter);
 
         assertEquals(2, actual.size());
         assertEquals("Ivan.Petrov", actual.get(0).getValue());

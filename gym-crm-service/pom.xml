@@ -166,7 +166,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>src/main/resources/gym-crm-api.yml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/gym-crm-api.yml</inputSpec>
                             <generatorName>spring</generatorName>
                             <modelPackage>com.gym.microservices.dto</modelPackage>
                             <configOptions>
