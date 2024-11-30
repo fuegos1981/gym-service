@@ -1,0 +1,14 @@
+spring:
+  config:
+    activate:
+      on-profile: stg
+  datasource:
+    url: ${STG_DB_URL}
+    username: ${STG_DB_USERNAME}
+    password: ${STG_DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+server:
+  port: 8084
+logging:
+  level:
+    root: INFO

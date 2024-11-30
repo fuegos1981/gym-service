@@ -1,0 +1,30 @@
+server:
+  port: 8080
+  max-http-header-size: 65536
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      httpclient:
+        maxHeaderSize: 65536
+      routes:
+        - id: gym-crm-service-route
+          uri: lb://gym-crm-service
+          predicates:
+             - Path=/api/v1/gym-crm-service/**
+        - id: training-hours-tracker-route
+          uri: lb://training-hours-tracker
+          predicates:
+            - Path=/api/v1/training-hours-tracker/**
+        - id: actuator-route
+          uri: lb://gym-crm-service
+          predicates:
+            - Path=/actuator/**
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true

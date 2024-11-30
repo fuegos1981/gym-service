@@ -1,0 +1,84 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="GSC-1 addUsers" author="Olena.Sinkevych">
+        <sql>
+            INSERT INTO user (id, first_name, last_name, username, password, isActive)
+            VALUES ('1','Oleg', 'Petrov','Oleg.Petrov','1111111111','1');
+            INSERT INTO user (id, first_name, last_name, username, password, isActive)
+            VALUES ('2','Olga', 'Ivanova','Olga.Ivanova','2222222222','1');
+            INSERT INTO user (id, first_name, last_name, username, password, isActive)
+            VALUES ('3','Denis', 'Bodov','Denis.Bodov','3333333333','1');
+            INSERT INTO user (id, first_name, last_name, username, password, isActive)
+            VALUES ('4','Sara', 'Kurkova','Sara.Kurkova','4444444444','1');
+            INSERT INTO user (id, first_name, last_name, username, password, isActive)
+            VALUES ('5','Vadim', 'Stahov','Vadim.Stahov','8888888888','1');
+            INSERT INTO user (id, first_name, last_name, username, password, isActive)
+            VALUES ('6','Maria', 'Ahova','Maria.Ahova','5555555555','1');
+            INSERT INTO user (id, first_name, last_name, username, password, isActive)
+            VALUES ('7','Mike', 'Rogov','Mike.Rogov','6666666666','1');
+            INSERT INTO user (id, first_name, last_name, username, password, isActive)
+            VALUES ('8','Daria', 'Martinova','Daria.Martinova','7777777777','1');
+        </sql>
+    </changeSet>
+
+    <changeSet id="GSC-1  addTrainees" author="Olena.Sinkevych">
+        <sql>
+            INSERT INTO trainee (id, date_of_birth, address, user_id)
+            VALUES ('1','1991-09-20', 'Gluhov','1');
+            INSERT INTO trainee (id, date_of_birth, address, user_id)
+            VALUES ('2','2000-07-15', 'Dnipro','2');
+            INSERT INTO trainee (id, date_of_birth, address, user_id)
+            VALUES ('3','1982-01-07', 'Nikolaev','3');
+            INSERT INTO trainee (id, date_of_birth, address, user_id)
+            VALUES ('4','1993-05-17', 'Dnipro','4');
+        </sql>
+    </changeSet>
+
+    <changeSet id="GSC-1  addTrainingTypes" author="Olena.Sinkevych">
+        <sql>
+            INSERT INTO training_type (id, name) VALUES ('1','Box');
+            INSERT INTO training_type (id, name) VALUES ('2','Aerobic');
+            INSERT INTO training_type (id, name) VALUES ('3','Fighting');
+            INSERT INTO training_type (id, name) VALUES ('4','Dance');
+        </sql>
+    </changeSet>
+
+    <changeSet id="GSC-1  addTrainers" author="Olena.Sinkevych">
+        <sql>
+            INSERT trainer (id, specialization_id, user_id) VALUES ('1','1','5');
+            INSERT trainer (id, specialization_id, user_id) VALUES ('2','2','6');
+            INSERT trainer (id, specialization_id, user_id) VALUES ('3','3','7');
+            INSERT trainer (id, specialization_id, user_id) VALUES ('4','4','8');
+        </sql>
+    </changeSet>
+
+    <changeSet id="GSC-1  addTrainings" author="Olena.Sinkevych">
+        <sql>
+            INSERT training (id, trainee_id, trainer_id, name, type_id, training_date, duration)
+            VALUES ('1','1','1', 'Active box','1','2024-09-15 17:30:00','60');
+            INSERT training (id, trainee_id, trainer_id, name, type_id, training_date, duration)
+            VALUES ('2','2','2', 'Activity in our life','2','2024-09-16 18:00:00','60');
+            INSERT training (id, trainee_id, trainer_id, name, type_id, training_date, duration)
+            VALUES ('3','3','3', 'Fighting','3','2024-09-16 19:00:00','45');
+            INSERT training (id, trainee_id, trainer_id, name, type_id, training_date, duration)
+            VALUES ('4','4','4', 'Dance','4','2024-09-16 18:00:00','60');
+        </sql>
+    </changeSet>
+
+    <changeSet id="GSC-1  addTrainee2Trainer" author="Olena.Sinkevych">
+        <sql>
+            INSERT trainee2trainer (id, trainee_id, trainer_id)
+            VALUES ('1','1','1');
+            INSERT trainee2trainer (id, trainee_id, trainer_id)
+            VALUES ('2','2','2');
+            INSERT trainee2trainer (id, trainee_id, trainer_id)
+            VALUES ('3','3','3');
+            INSERT trainee2trainer (id, trainee_id, trainer_id)
+            VALUES ('4','4','4');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

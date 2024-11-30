@@ -1,0 +1,78 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="GSC-2 renameColumnIsActive" author="Olena.Sinkevych">
+        <renameColumn tableName="user"
+                      columnDataType="BOOLEAN"
+                      newColumnName="is_active"
+                      oldColumnName="IsActive"/>
+    </changeSet>
+
+    <changeSet id="GSC-2 changePasswordLength" author="Olena.Sinkevych">
+        <modifyDataType tableName="user"
+                        columnName="password"
+                        newDataType="VARCHAR(50)"/>
+    </changeSet>
+
+    <changeSet id="GSC-2 addForeignKeyTrainingTypeInTraining" author="Olena.Sinkevych">
+        <addForeignKeyConstraint
+                baseTableName="training"
+                baseColumnNames="type_id"
+                constraintName="fk_training_type"
+                referencedTableName="training_type"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="GSC-2 changeTypeDateOfBerth" author="Olena.Sinkevych">
+        <modifyDataType tableName="trainee"
+                        columnName="date_of_birth"
+                        newDataType="DATE"/>
+    </changeSet>
+
+    <changeSet id="GSC-2 changeTypeDuration" author="Olena.Sinkevych">
+        <modifyDataType tableName="training"
+                        columnName="duration"
+                        newDataType="FLOAT"/>
+    </changeSet>
+
+    <changeSet id="GSC-2 changePassword" author="Olena.Sinkevych">
+        <update tableName="user">
+            <column name="password" value="30C69C984072631B8146228C3051CA2A"/>
+            <where>id='1'</where>
+        </update>
+        <update tableName="user">
+            <column name="password" value="894071D21C1F7892D20472DF81558AD5"/>
+            <where>id='2'</where>
+        </update>
+        <update tableName="user">
+            <column name="password" value="9D4BF789D25834ACE7243AB4009B6F4F"/>
+            <where>id='3'</where>
+        </update>
+        <update tableName="user">
+            <column name="password" value="2E78D671A5E0A2B817FE5967CFBD61C6"/>
+            <where>id='4'</where>
+        </update>
+        <update tableName="user">
+            <column name="password" value="5070ACC8244017E30375EB1D3A475232"/>
+            <where>id='5'</where>
+        </update>
+        <update tableName="user">
+            <column name="password" value="E31A2DD1B0E22669737B3E226F45982B"/>
+            <where>id='6'</where>
+        </update>
+        <update tableName="user">
+            <column name="password" value="2579B5B0CEC6BE9B09C7B06CD9446A9F"/>
+            <where>id='7'</where>
+        </update>
+        <update tableName="user">
+            <column name="password" value="446AB76E87D74D48DF7A700D8B94596A"/>
+            <where>id='8'</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

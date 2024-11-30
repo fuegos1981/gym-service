@@ -1,0 +1,782 @@
+openapi: 3.0.3
+info:
+  title: GYM SRM SERVICE API
+  version: 1.0.0
+servers:
+  - url: http://localhost/api/v1
+    description: Version 1 of the API
+tags:
+  - name: Trainees
+    description: Trainee API routes
+  - name: Trainers
+    description: Trainers API routes
+  - name: Trainings
+    description: Trainers API routes
+paths:
+  /trainee/register:
+    post:
+      tags:
+        - Trainees
+      operationId: registerTrainee
+      summary: Register a new trainee
+      requestBody:
+        $ref: '#/components/requestBodies/RegisterTraineeRequest'
+      responses:
+        '200':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetailsResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainee/login:
+    get:
+      tags:
+        - Trainees
+      operationId: loginTrainee
+      summary: User login
+      description: Authenticate the user with username and password
+      parameters:
+        - $ref: '#/components/parameters/UsernameParam'
+        - $ref: '#/components/parameters/PasswordParam'
+      responses:
+        '200':
+          description: Successfully authenticated with JWT token
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainee/change-login:
+    put:
+      tags:
+        - Trainees
+      operationId: changeTraineeLogin
+      summary: Change login credentials
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginChangeRequest'
+      responses:
+        '200':
+          description: Login changed successfully
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainee/{username}:
+    get:
+      tags:
+        - Trainees
+      operationId: getTrainee
+      summary: Get Trainee profile
+      parameters:
+        - $ref: '#/components/parameters/UsernamePathParam'
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTraineeResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainee/update:
+    put:
+      tags:
+        - Trainees
+      operationId: updateTrainee
+      summary: Update Trainee profile
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateTraineeRequest'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTraineeResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainee/delete/{username}:
+    delete:
+      tags:
+        - Trainees
+      operationId: deleteTrainee
+      summary: Delete Trainee
+      parameters:
+        - $ref: '#/components/parameters/UsernamePathParam'
+      responses:
+        '200':
+          description: Trainee deleted successfully
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainer/register:
+    post:
+      tags:
+        - Trainers
+      operationId: registerTrainer
+      summary: Register a new trainer
+      requestBody:
+        $ref: '#/components/requestBodies/RegisterTrainerRequest'
+      responses:
+        '200':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetailsResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainer/login:
+    get:
+      tags:
+        - Trainers
+      operationId: loginTrainer
+      summary: User login
+      description: Authenticate the user with username and password
+      parameters:
+        - $ref: '#/components/parameters/UsernameParam'
+        - $ref: '#/components/parameters/PasswordParam'
+      responses:
+        '200':
+          description: Successfully authenticated with JWT token
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainer/change-login:
+    put:
+      tags:
+        - Trainers
+      operationId: changeTrainerLogin
+      summary: Change login credentials
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginChangeRequest'
+      responses:
+        '200':
+          description: Login changed successfully
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainer/{username}:
+    get:
+      tags:
+        - Trainers
+      operationId: getTrainer
+      summary: Get Trainer profile
+      parameters:
+        - $ref: '#/components/parameters/UsernamePathParam'
+      responses:
+        '200':
+          description: Trainer profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTrainerResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainer/update:
+    put:
+      tags:
+        - Trainers
+      operationId: updateTrainer
+      summary: Update Trainer
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateTrainerRequest'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTrainerResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainee/{username}/trainers/not-assigned:
+    get:
+      tags:
+        - Trainees
+      operationId: getTrainersNotAssignedTrainee
+      summary: Get trainers not assigned to trainee
+      parameters:
+        - $ref: '#/components/parameters/UsernamePathParam'
+      responses:
+        '200':
+          description: Trainers retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTrainersResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainee/trainers:
+    put:
+      tags:
+        - Trainees
+      operationId: updateTraineesTrainers
+      summary: Update Trainee's Trainer List
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateTraineeTrainersRequest'
+      responses:
+        '200':
+          description: Trainers list updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTraineesTrainersResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainee/trainings:
+    get:
+      tags:
+        - Trainees
+      operationId: getTraineeTrainings
+      summary: Get Trainee Trainings List
+      parameters:
+        - $ref: '#/components/parameters/UsernameParam'
+        - $ref: '#/components/parameters/PeriodFromParam'
+        - $ref: '#/components/parameters/PeriodToParam'
+        - $ref: '#/components/parameters/TrainerName'
+        - $ref: '#/components/parameters/TrainingType'
+      responses:
+        '200':
+          description: Trainings retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TraineeTrainingsResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainer/trainings:
+    get:
+      tags:
+        - Trainers
+      operationId: getTrainerTrainings
+      summary: Get Trainer Trainings List
+      parameters:
+        - $ref: '#/components/parameters/UsernameParam'
+        - $ref: '#/components/parameters/PeriodFromParam'
+        - $ref: '#/components/parameters/PeriodToParam'
+        - $ref: '#/components/parameters/TraineeName'
+      responses:
+        '200':
+          description: Trainings retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainerTrainingsResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /training/create:
+    post:
+      tags:
+        - Trainings
+      operationId: addTrainings
+      summary: Add Training
+      requestBody:
+        $ref: '#/components/requestBodies/AddTrainingRequest'
+      responses:
+        '200':
+          description: Training added successfully
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainee/activate:
+    patch:
+      tags:
+        - Trainees
+      operationId: activateTrainee
+      summary: Activate or De-Activate Trainee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivateUserRequest'
+      responses:
+        '200':
+          description: Activation status updated successfully
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainer/activate:
+    patch:
+      tags:
+        - Trainers
+      operationId: activateTrainer
+      summary: Activate or De-Activate Trainer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivateUserRequest'
+      responses:
+        '200':
+          description: Activation status updated successfully
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainer/training-types:
+    get:
+      tags:
+        - Trainers
+      operationId: getTrainingTypes
+      summary: Get Training Types
+      responses:
+        '200':
+          description: Training types retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingTypeResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainee/logout:
+    get:
+      tags:
+        - Trainees
+      summary: Trainee Logout
+      description: Logs out the current trainee by invalidating the token.
+      operationId: logoutTrainee
+      responses:
+        '200':
+          description: Successful logout
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /trainer/logout:
+    get:
+      tags:
+        - Trainers
+      summary: Trainer Logout
+      description: Logs out the current trainer by invalidating the token
+      operationId: logoutTrainer
+      responses:
+        '200':
+          description: Successful logout
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  parameters:
+    UsernamePathParam:
+      in: path
+      name: username
+      required: true
+      schema:
+        type: string
+      example: Ivan.Ivanov
+    UsernameParam:
+      in: query
+      name: username
+      required: true
+      schema:
+        type: string
+      example: Ivan.Ivanov
+      description: Username for filtering
+    PasswordParam:
+      in: query
+      name: password
+      schema:
+        type: string
+      required: true
+      description: The password for login
+      example: 1111111111
+    PeriodFromParam:
+      in: query
+      name: periodFrom
+      schema:
+        type: string
+        format: date
+      description: Start date for the period filter
+      example: 2024-10-24
+    PeriodToParam:
+      in: query
+      name: periodTo
+      schema:
+        type: string
+        format: date
+      description: End date for the period filter
+      example: 2024-10-27
+    TraineeName:
+      in: query
+      name: traineeName
+      schema:
+        type: string
+      example: Ivan.Ivanov
+    TrainerName:
+      in: query
+      name: trainerName
+      schema:
+        type: string
+      example: Oleg.Petrov
+    TrainingType:
+      in: query
+      name: trainingType
+      schema:
+        $ref: '#/components/schemas/TrainingType'
+      example: Box
+
+  schemas:
+    GetTraineeResponse:
+      allOf:
+        - $ref: "#/components/schemas/TraineeProfile"
+        - type: object
+          properties:
+            isActive:
+              type: boolean
+              example: true
+            trainers:
+              $ref: '#/components/schemas/GetTrainersResponse'
+    UpdateTraineeResponse:
+      allOf:
+        - $ref: "#/components/schemas/TraineeProfile"
+        - type: object
+          properties:
+            username:
+              type: string
+              example: Ivan.Ivanov
+            isActive:
+              type: boolean
+              example: true
+            trainers:
+              $ref: '#/components/schemas/GetTrainersResponse'
+    TraineeProfile:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Ivan
+        lastName:
+          type: string
+          example: Ivanov
+        dateOfBirth:
+          type: string
+          format: date
+          example: 2000-10-11
+        address:
+          type: string
+          example: Merefa
+    GetTrainersResponse:
+      type: array
+      items:
+        allOf:
+          - type: object
+            properties:
+              username:
+                type: string
+                example: Oleg.Petrov
+          - $ref: '#/components/schemas/TrainerProfile'
+    UpdateTraineesTrainersResponse:
+      type: array
+      items:
+        type: object
+        allOf:
+          - type: object
+            properties:
+              username:
+                type: string
+                example: Oleg.Petrov
+          - $ref: '#/components/schemas/TrainerProfile'
+    TraineeTrainingsResponse:
+      type: array
+      items:
+        allOf:
+          - $ref: '#/components/schemas/TrainingDetails'
+          - type: object
+            properties:
+              trainerName:
+                type: string
+                example:
+                  Oleg.Petrov
+    GetTrainerResponse:
+      allOf:
+        - $ref: "#/components/schemas/TrainerProfile"
+      properties:
+        isActive:
+          type: boolean
+          example: true
+        trainees:
+          type: array
+          items:
+            type: object
+            allOf:
+              - $ref: '#/components/schemas/UserProfile'
+    UpdateTrainerResponse:
+      allOf:
+        - $ref: "#/components/schemas/TrainerProfile"
+        - type: object
+          properties:
+            username:
+              type: string
+              example: Oleg.Petrov
+            isActive:
+              type: boolean
+              example: true
+            trainees:
+              type: array
+              items:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/UserProfile'
+    TrainerProfile:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Oleg
+        lastName:
+          type: string
+          example: Petrov
+        specialization:
+          $ref: '#/components/schemas/TrainingType'
+    TrainerTrainingsResponse:
+      type: array
+      items:
+        allOf:
+          - $ref: '#/components/schemas/TrainingDetails'
+          - type: object
+            properties:
+              traineeName:
+                type: string
+                example:
+                  Ivan.Ivanov
+    TrainingDetails:
+      type: object
+      properties:
+        trainingName:
+          type: string
+          example: Modern box
+        trainingDate:
+          type: string
+          format: date
+          example: 2024-10-27
+        trainingType:
+          $ref: '#/components/schemas/TrainingType'
+        trainingDuration:
+          type: number
+          format: double
+          example: 2.0
+    TrainingFilter:
+      type: object
+      properties:
+        trainerName:
+          type: string
+        traineeName:
+          type: string
+        periodFrom:
+          type: string
+          format: date
+        periodTo:
+          type: string
+          format: date
+        trainingType:
+          type: string
+    TrainingTypeResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          type:
+            type: string
+            example: Box
+          typeId:
+            type: integer
+            example:
+              1
+    TrainingType:
+      type: string
+      example: Box
+      enum:
+        - Box
+        - Aerobic
+        - Fighting
+        - Dance
+    ActivateUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: Ivan.Ivanov
+        isActive:
+          type: boolean
+          example: true
+      required:
+        - username
+        - isActive
+    LoginChangeRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Current username
+          example: Ivan.Ivanov
+        oldPassword:
+          type: string
+          description: Old password
+          example: 1111111111
+        newPassword:
+          type: string
+          description: New password
+          example: 2222222222
+      required:
+        - username
+        - oldPassword
+        - newPassword
+    UserDetailsResponse:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Generated username for the trainee
+          example: Ivan.Ivanov
+        password:
+          type: string
+          description: Generated password for the trainee
+          example:
+            1111111111
+    UserProfile:
+      type: object
+      properties:
+        username:
+          type: string
+          example: Ivan.Ivanov
+        firstName:
+          type: string
+          example: Ivan
+        lastName:
+          type: string
+          example: Ivanov
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: error code
+          example: 930
+        message:
+          type: string
+          description: Error message
+          example: An unexpected error occurred
+  requestBodies:
+    RegisterTraineeRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TraineeProfile"
+            required:
+              - firstName
+              - lastName
+    UpdateTraineeRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/TraineeProfile"
+              - type: object
+                properties:
+                  username:
+                    type: string
+                    example: Ivan.Ivanov
+                  isActive:
+                    type: boolean
+                    example: true
+            required:
+              - username
+              - firstName
+              - lastName
+              - isActive
+    UpdateTraineeTrainersRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              traineeUsername:
+                type: string
+                example: Ivan.Ivanov
+              trainers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    trainerUsername:
+                      type: string
+                      example: Oleg.Petrov
+            required:
+              - traineeUsername
+    RegisterTrainerRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TrainerProfile"
+            required:
+              - firstName
+              - lastName
+    UpdateTrainerRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            allOf:
+              - $ref: "#/components/schemas/TrainerProfile"
+            properties:
+              username:
+                type: string
+                example: Ivan.Ivanov
+              isActive:
+                type: boolean
+                example: true
+            required:
+              - username
+              - firstName
+              - lastName
+              - isActive
+    AddTrainingRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              traineeUsername:
+                type: string
+                example: Ivan.Ivanov
+              trainerUsername:
+                type: string
+                example: Oleg.Petrov
+              trainingName:
+                type: string
+                example: Modern box
+              trainingDate:
+                type: string
+                format: date
+                example: 2024-11-12
+              trainingDuration:
+                type: number
+                format: double
+                example: 2.0
+            required:
+              - traineeUsername
+              - trainerUsername
+              - trainingName
+              - trainingDate
+              - trainingDuration
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
