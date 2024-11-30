@@ -7,3 +7,5 @@ eureka:
     fetch-registry: false
   instance:
     hostname: localhost
+    health-check-url-path: /actuator/health
+    status-page-url-path: /actuator/info

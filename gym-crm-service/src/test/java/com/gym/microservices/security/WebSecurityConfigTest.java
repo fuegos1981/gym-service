@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class WebSecurityConfigTest {
 
-    private static final String ROOT_URL = "http://localhost:8084";
+    private static final String ROOT_URL = "http://localhost:8080";
 
     @Mock
     private CustomUserDetailsService userService;

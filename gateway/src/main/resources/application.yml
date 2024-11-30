@@ -19,7 +19,7 @@ spring:
           predicates:
             - Path=/api/v1/training-hours-tracker/**
         - id: actuator-route
-          uri: http://localhost:8080
+          uri: lb://gym-crm-service
           predicates:
             - Path=/actuator/**
 eureka:
