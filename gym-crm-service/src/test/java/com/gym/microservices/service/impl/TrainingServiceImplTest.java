@@ -21,7 +21,10 @@ import java.time.LocalDate;
 
 import static java.util.Optional.of;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,6 +39,9 @@ class TrainingServiceImplTest {
 
     @Mock
     private TrainerRepository trainerRepository;
+
+    @Mock
+    private AnalyticsSender sender;
 
     @InjectMocks
     private TrainingServiceImpl service;
@@ -77,7 +83,7 @@ class TrainingServiceImplTest {
 
         when(traineeRepository.findByUserUsername(anyString())).thenReturn(of(trainee));
         when(trainerRepository.findByUserUsername(anyString())).thenReturn(of(trainer));
-
+        lenient().when(sender.processWorkload(any(Training.class), eq("ADD"))).thenReturn("Ok");
         service.create(trainingCreateRequest);
 
         verify(repository).save(trainingCaptor.capture());

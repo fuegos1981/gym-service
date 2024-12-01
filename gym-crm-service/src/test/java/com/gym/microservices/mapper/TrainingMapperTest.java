@@ -2,6 +2,7 @@ package com.gym.microservices.mapper;
 
 import com.gym.microservices.dto.TraineeTrainingsResponseInner;
 import com.gym.microservices.dto.TrainerTrainingsResponseInner;
+import com.gym.microservices.dto.TrainerWorkloadRequest;
 import com.gym.microservices.model.Trainee;
 import com.gym.microservices.model.Trainer;
 import com.gym.microservices.model.Training;
@@ -44,6 +45,20 @@ class TrainingMapperTest {
         assertEquals(TRAINING.getTrainingDate(), actual.getTrainingDate());
         assertEquals(TRAINING.getTrainee().getUser().getUsername(), actual.getTraineeName());
         assertEquals(TRAINING.getTrainingDate(), actual.getTrainingDate());
+        assertEquals(TRAINING.getDuration(), actual.getTrainingDuration());
+    }
+
+    @Test
+    void checkIfToTrainerWorkloadRequestIsCorrect() {
+        String action = "ADD";
+
+        TrainerWorkloadRequest actual = mapper.toTrainerWorkloadRequest(TRAINING, action);
+
+        assertEquals(TRAINING.getTrainer().getUser().getUsername(), actual.getUsername());
+        assertEquals(TRAINING.getTrainer().getUser().getFirstName(), actual.getFirstName());
+        assertEquals(TRAINING.getTrainer().getUser().getLastName(), actual.getLastName());
+        assertEquals(TRAINING.getTrainingDate(), actual.getTrainingDate());
+        assertEquals(action, actual.getActionType());
         assertEquals(TRAINING.getDuration(), actual.getTrainingDuration());
     }
 

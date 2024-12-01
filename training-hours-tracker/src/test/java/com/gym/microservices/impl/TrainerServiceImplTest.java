@@ -44,7 +44,7 @@ class TrainerServiceImplTest {
                 .lastName("Doe")
                 .isActive(true)
                 .trainingDate(LocalDate.of(2024, 11, 23))
-                .trainingDuration(120)
+                .trainingDuration(120.00)
                 .actionType("ADD")
                 .build();
 
@@ -103,7 +103,7 @@ class TrainerServiceImplTest {
         assertNull(response);
     }
 
-    private TrainerWorkload buildTrainerWorkload(LocalDate trainingDate, int duration) {
+    private TrainerWorkload buildTrainerWorkload(LocalDate trainingDate, double duration) {
         return TrainerWorkload.builder()
                 .username(USERNAME)
                 .firstName("John")

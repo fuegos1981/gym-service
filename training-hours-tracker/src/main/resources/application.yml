@@ -32,3 +32,8 @@ logging:
   appender:
     console:
       name: STDOUT
+app:
+  analytic_username: temp
+  analytic_password: temp
+jwt:
+  secret: my-secure-secret-key-which-is-shared

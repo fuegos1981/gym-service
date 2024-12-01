@@ -19,14 +19,16 @@ public class TrainingServiceImpl implements TrainingService {
     private final TraineeRepository traineeRepository;
     private final TrainerRepository trainerRepository;
     private final TrainingRepository repository;
+    private final AnalyticsSender sender;
 
     @Autowired
     public TrainingServiceImpl(TraineeRepository traineeRepository,
                                TrainerRepository trainerRepository,
-                               TrainingRepository trainingRepository) {
+                               TrainingRepository trainingRepository, AnalyticsSender sender) {
         this.traineeRepository = traineeRepository;
         this.trainerRepository = trainerRepository;
         this.repository = trainingRepository;
+        this.sender = sender;
     }
 
     @Override
@@ -46,6 +48,9 @@ public class TrainingServiceImpl implements TrainingService {
                 .trainingDate(request.getTrainingDate())
                 .duration(request.getTrainingDuration()).build();
 
-        return repository.save(training);
+        Training  savedTraining= repository.save(training);
+        sender.processWorkload(savedTraining, "ADD");
+
+        return savedTraining;
     }
 }

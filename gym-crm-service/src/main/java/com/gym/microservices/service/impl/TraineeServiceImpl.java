@@ -36,16 +36,18 @@ public class TraineeServiceImpl implements TraineeService {
     private final TrainingRepository trainingRepository;
     private final ProfileService profileService;
     private final CustomPasswordEncoder passwordEncoder;
+    private final AnalyticsSender sender;
 
     @Autowired
     public TraineeServiceImpl(TraineeRepository traineeRepository, TrainerRepository trainerRepository, ProfileService profileService,
-                              UserRepository userRepository, TrainingRepository trainingRepository, CustomPasswordEncoder passwordEncoder) {
+                              UserRepository userRepository, TrainingRepository trainingRepository, CustomPasswordEncoder passwordEncoder, AnalyticsSender sender) {
         this.repository = traineeRepository;
         this.trainerRepository = trainerRepository;
         this.userRepository = userRepository;
         this.trainingRepository = trainingRepository;
         this.profileService = profileService;
         this.passwordEncoder = passwordEncoder;
+        this.sender = sender;
     }
 
     @Override
@@ -168,6 +170,7 @@ public class TraineeServiceImpl implements TraineeService {
         Trainee trainee = repository.findByUserUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(format("Trainee for deleting: %s not found in Repository", username)));
 
+        sender.processWorkload(trainingRepository.findByTraineeUserUsername(username), "DELETE");
         repository.delete(trainee);
 
         return true;

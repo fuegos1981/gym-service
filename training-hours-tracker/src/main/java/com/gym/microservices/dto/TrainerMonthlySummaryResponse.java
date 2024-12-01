@@ -34,14 +34,14 @@ public class TrainerMonthlySummaryResponse implements Serializable {
     @Data
     public static class MonthlySummary implements Serializable {
         private Month month;
-        private int totalDuration;
+        private Double totalDuration;
     }
 
     public enum Status {
         ACTIVE, NOT_ACTIVE
     }
 
-    public void addDurationToYearlySummary(LocalDate trainingDate, Integer duration) {
+    public void addDurationToYearlySummary(LocalDate trainingDate, Double duration) {
         int year = trainingDate.getYear();
         Month month = trainingDate.getMonth();
 
@@ -50,7 +50,7 @@ public class TrainerMonthlySummaryResponse implements Serializable {
         updateMonthlySummary(duration, month, yearlySummary);
     }
 
-    private void updateMonthlySummary(Integer duration, Month month, YearlySummary yearlySummary) {
+    private void updateMonthlySummary(Double duration, Month month, YearlySummary yearlySummary) {
         Optional<MonthlySummary> existingMonthlySummary = yearlySummary.getMonthlySummaries().stream()
                 .filter(e -> e.getMonth() == month)
                 .findFirst();

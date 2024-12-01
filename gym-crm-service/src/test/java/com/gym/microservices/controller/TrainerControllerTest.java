@@ -1,6 +1,7 @@
 package com.gym.microservices.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gym.microservices.GymApplication;
 import com.gym.microservices.dto.GetTrainerResponse;
 import com.gym.microservices.dto.TrainerProfile;
 import com.gym.microservices.dto.TrainerTrainingsResponseInner;
@@ -26,6 +27,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -46,6 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TrainerController.class)
+@ContextConfiguration(classes = GymApplication.class)
 @Import(TestSecurityConfig.class)
 class TrainerControllerTest {
 

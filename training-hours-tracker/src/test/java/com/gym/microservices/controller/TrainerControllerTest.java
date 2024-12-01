@@ -37,7 +37,7 @@ class TrainerControllerTest {
         TrainerWorkloadRequest workloadRequest = TrainerWorkloadRequest.builder()
                 .username(USERNAME)
                 .trainingDate(LocalDate.of(2024, 11, 23))
-                .trainingDuration(120)
+                .trainingDuration(120.00)
                 .build();
 
         doNothing().when(trainerService).saveWorkload(workloadRequest);
@@ -74,7 +74,7 @@ class TrainerControllerTest {
         yearlySummary.setYear(2024);
 
         List<TrainerMonthlySummaryResponse.MonthlySummary> monthlySummaries = new ArrayList<>();
-        monthlySummaries.add(new TrainerMonthlySummaryResponse.MonthlySummary(Month.NOVEMBER, 180));
+        monthlySummaries.add(new TrainerMonthlySummaryResponse.MonthlySummary(Month.NOVEMBER, 180.00));
         yearlySummary.setMonthlySummaries(monthlySummaries);
 
         yearlySummaries.add(yearlySummary);

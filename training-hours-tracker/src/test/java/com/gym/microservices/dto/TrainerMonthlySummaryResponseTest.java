@@ -14,8 +14,8 @@ class TrainerMonthlySummaryResponseTest {
 
     private static final LocalDate FIRST_TRAINING_DATE = LocalDate.of(2024, 11, 23);
     private static final LocalDate SECOND_TRAINING_DATE = LocalDate.of(2024, 12, 10);
-    private static final int FIRST_DURATION = 120;
-    private static final int SECOND_DURATION = 90;
+    private static final double FIRST_DURATION = 120;
+    private static final double SECOND_DURATION = 90;
 
     private TrainerMonthlySummaryResponse summaryResponse;
 
@@ -48,7 +48,7 @@ class TrainerMonthlySummaryResponseTest {
     void addDurationToYearlySummary_ShouldUpdateExistingMonthlySummary_WhenMonthExists() {
         summaryResponse.addDurationToYearlySummary(FIRST_TRAINING_DATE, FIRST_DURATION);
 
-        int additionalDuration = 60;
+        double additionalDuration = 60.00;
 
         summaryResponse.addDurationToYearlySummary(FIRST_TRAINING_DATE, additionalDuration);
 

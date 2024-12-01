@@ -67,7 +67,7 @@ class TrainerWorkloadMapperTest {
                 .username("trainer123")
                 .isActive(true)
                 .trainingDate(LocalDate.of(2024, 11, 23))
-                .trainingDuration(120)
+                .trainingDuration(120.00)
                 .actionType(actionType)
                 .build();
     }

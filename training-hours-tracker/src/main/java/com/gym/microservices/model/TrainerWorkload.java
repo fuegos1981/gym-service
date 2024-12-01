@@ -38,5 +38,5 @@ public class TrainerWorkload {
     private LocalDate trainingDate;
 
     @Column(nullable = false)
-    private int trainingDuration;
+    private Double trainingDuration;
 }

@@ -65,3 +65,7 @@ scrape_configs:
 app:
   root:
     url: http://localhost:8080
+  analytic_username: temp
+  analytic_password: temp
+jwt:
+  secret: my-secure-secret-key-which-is-shared

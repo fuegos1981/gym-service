@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -58,6 +59,9 @@ class TraineeServiceImplTest {
 
     @Mock
     private TrainingRepository trainingRepository;
+
+    @Mock
+    private AnalyticsSender sender;
 
     @Mock
     private ProfileService profileService;
@@ -143,6 +147,7 @@ class TraineeServiceImplTest {
         Trainee trainee = buildTrainee(user);
 
         when(repository.findByUserUsername(eq(USERNAME))).thenReturn(ofNullable(trainee));
+        when(sender.processWorkload(any(List.class), anyString())).thenReturn("OK");
         doNothing().when(repository).delete(trainee);
 
         service.delete(USERNAME);

@@ -24,7 +24,7 @@ public class TrainerWorkloadRequest {
     @NotNull
     private LocalDate trainingDate;
     @NotNull
-    private int trainingDuration;
+    private Double trainingDuration;
     @NotNull
     private String actionType;
 }

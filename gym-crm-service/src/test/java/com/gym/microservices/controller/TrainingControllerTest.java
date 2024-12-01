@@ -1,6 +1,7 @@
 package com.gym.microservices.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gym.microservices.GymApplication;
 import com.gym.microservices.dto.AddTrainingsRequest;
 import com.gym.microservices.facade.ServiceFacade;
 import com.gym.microservices.model.Training;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -29,6 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TrainingController.class)
+@ContextConfiguration(classes = GymApplication.class)
 @Import(TestSecurityConfig.class)
 class TrainingControllerTest {
 
