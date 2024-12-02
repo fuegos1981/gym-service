@@ -21,11 +21,11 @@ import java.io.IOException;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    @Value("${app.analytic_username}")
-    private String username;
-
     private final JwtProvider jwtProvider;
     private final CustomUserDetailsService userDetailsService;
+
+    @Value("${app.analytic_username}")
+    private String username;
 
     public JwtFilter(JwtProvider jwtProvider, CustomUserDetailsService userDetailsService) {
         this.jwtProvider = jwtProvider;

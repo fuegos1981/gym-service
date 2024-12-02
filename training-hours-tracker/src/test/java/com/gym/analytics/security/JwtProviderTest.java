@@ -19,6 +19,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class JwtProviderTest {
+
     private static final String USERNAME = "testuser";
     private static final String SECRET = "verysecretkey12345678901234567890";
 

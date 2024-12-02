@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class BruteForceProtector {
+
     private static final int MAX_ATTEMPTS = 3;
     private static final int BLOCK_DURATION_MINUTES = 5;
 

@@ -18,6 +18,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 public class TrainerWorkload {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TrainerWorkloadMapper {
+
     private final static String ADD_ACTION = "ADD";
 
     public TrainerWorkload toGetTrainerWorkload(TrainerWorkloadRequest request) {

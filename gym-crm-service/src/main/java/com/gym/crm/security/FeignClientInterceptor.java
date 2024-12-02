@@ -11,15 +11,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class FeignClientInterceptor implements RequestInterceptor {
 
+    private final JwtProvider jwtProvider;
+
     @Value("${app.analytic_username}")
     private String username;
     @Value("${app.analytic_password}")
     private String password;
 
-    private final JwtProvider jwtProvider;
-
     public FeignClientInterceptor(JwtProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
+    }
+
+    @Override
+    public void apply(RequestTemplate requestTemplate) {
+        String token = getJwtToken();
+        requestTemplate.header("Authorization", token);
     }
 
     private String getJwtToken() {
@@ -31,11 +37,5 @@ public class FeignClientInterceptor implements RequestInterceptor {
         String token = "Bearer " + jwtProvider.generateToken(userDetails);
         log.info("Token for analytics: " + token);
         return token;
-    }
-
-    @Override
-    public void apply(RequestTemplate requestTemplate) {
-        String token = getJwtToken();
-        requestTemplate.header("Authorization", token);
     }
 }

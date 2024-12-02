@@ -1,25 +1,22 @@
 package com.gym.analytics.service.impl;
 
-import com.gym.analytics.repository.TrainerWorkloadRepository;
 import com.gym.analytics.dto.TrainerMonthlySummaryResponse;
 import com.gym.analytics.dto.TrainerWorkloadRequest;
 import com.gym.analytics.mapper.TrainerWorkloadMapper;
 import com.gym.analytics.model.TrainerWorkload;
+import com.gym.analytics.repository.TrainerWorkloadRepository;
 import com.gym.analytics.service.TrainerService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class TrainerServiceImpl implements TrainerService {
 
     private final TrainerWorkloadRepository repository;
     private final TrainerWorkloadMapper mapper;
-
-    public TrainerServiceImpl(TrainerWorkloadRepository repository, TrainerWorkloadMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
 
     public void saveWorkload(TrainerWorkloadRequest workload) {
         repository.save(mapper.toGetTrainerWorkload(workload));

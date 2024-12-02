@@ -9,27 +9,18 @@ import com.gym.crm.repository.TraineeRepository;
 import com.gym.crm.repository.TrainerRepository;
 import com.gym.crm.repository.TrainingRepository;
 import com.gym.crm.service.TrainingService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
 public class TrainingServiceImpl implements TrainingService {
 
     private final TraineeRepository traineeRepository;
     private final TrainerRepository trainerRepository;
     private final TrainingRepository repository;
     private final AnalyticsSender sender;
-
-    @Autowired
-    public TrainingServiceImpl(TraineeRepository traineeRepository,
-                               TrainerRepository trainerRepository,
-                               TrainingRepository trainingRepository, AnalyticsSender sender) {
-        this.traineeRepository = traineeRepository;
-        this.trainerRepository = trainerRepository;
-        this.repository = trainingRepository;
-        this.sender = sender;
-    }
 
     @Override
     @Transactional
@@ -48,7 +39,7 @@ public class TrainingServiceImpl implements TrainingService {
                 .trainingDate(request.getTrainingDate())
                 .duration(request.getTrainingDuration()).build();
 
-        Training  savedTraining= repository.save(training);
+        Training savedTraining = repository.save(training);
         sender.processWorkload(savedTraining, "ADD");
 
         return savedTraining;

@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class JwtFilterTest {
+
     private final static String username = "testUser";
 
     @Mock

@@ -17,7 +17,7 @@ import com.gym.crm.security.CustomPasswordEncoder;
 import com.gym.crm.service.TrainerService;
 import com.gym.crm.specification.SearchCriteria;
 import com.gym.crm.specification.SpecificationsBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class TrainerServiceImpl implements TrainerService {
 
     private final TrainerRepository repository;
@@ -33,19 +34,6 @@ public class TrainerServiceImpl implements TrainerService {
     private final TrainingRepository trainingRepository;
     private final ProfileService profileService;
     private final CustomPasswordEncoder passwordEncoder;
-
-    @Autowired
-    public TrainerServiceImpl(TrainerRepository trainerRepository,
-                              UserRepository userRepository,
-                              TrainingTypeRepository trainingTypeRepository, TrainingRepository trainingRepository,
-                              ProfileService profileService, CustomPasswordEncoder passwordEncoder) {
-        this.repository = trainerRepository;
-        this.userRepository = userRepository;
-        this.trainingTypeRepository = trainingTypeRepository;
-        this.trainingRepository = trainingRepository;
-        this.profileService = profileService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     @Transactional

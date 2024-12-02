@@ -82,5 +82,4 @@ class TrainerControllerTest {
 
         return response;
     }
-
 }

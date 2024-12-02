@@ -1,15 +1,15 @@
 package com.gym.crm.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class DataBaseHealthCheck implements HealthIndicator {
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Override
