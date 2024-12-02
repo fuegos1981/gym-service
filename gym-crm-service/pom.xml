@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>gym-service</artifactId>
-        <groupId>com.gym.microservices</groupId>
+        <groupId>com.gym</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -123,7 +123,7 @@
             <artifactId>junit-jupiter-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gym.microservices</groupId>
+            <groupId>com.gym</groupId>
             <artifactId>training-hours-tracker</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
@@ -160,7 +160,7 @@
                 </executions>
                 <configuration>
                     <excludes>
-                        <exclude>com/gym/microservices/dto/**</exclude>
+                        <exclude>com/gym/crm/dto/**</exclude>
                         <exclude>org/openapitools/**</exclude>
                     </excludes>
                 </configuration>
@@ -177,7 +177,7 @@
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/gym-crm-api.yml</inputSpec>
                             <generatorName>spring</generatorName>
-                            <modelPackage>com.gym.microservices.dto</modelPackage>
+                            <modelPackage>com.gym.crm.dto</modelPackage>
                             <configOptions>
                                 <dateLibrary>java8-localdatetime</dateLibrary>
                                 <openApiNullable>false</openApiNullable>
