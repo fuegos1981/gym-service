@@ -18,6 +18,8 @@ spring:
           uri: lb://training-hours-tracker
           predicates:
             - Path=/api/v1/training-hours-tracker/**
+          filters:
+            - AddRequestHeader=Authorization, $httpAuthorization
         - id: actuator-route
           uri: lb://gym-crm-service
           predicates:

@@ -15,7 +15,7 @@
 		<version>3.3.3</version>
 		<relativePath/>
 	</parent>
-	<groupId>com.gym.microservices</groupId>
+	<groupId>com.gym</groupId>
 	<artifactId>gym-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gym-service</name>
@@ -26,6 +26,7 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<jsonwebtoken.version>0.12.6</jsonwebtoken.version>
 	</properties>
 
 	<dependencyManagement>
