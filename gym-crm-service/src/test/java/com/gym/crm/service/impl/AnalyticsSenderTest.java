@@ -1,7 +1,7 @@
 package com.gym.crm.service.impl;
 
-import com.gym.crm.controller.TrainingHoursTrackerClient;
 import com.gym.analytics.dto.TrainerWorkloadRequest;
+import com.gym.crm.controller.TrainingHoursTrackerClient;
 import com.gym.crm.mapper.TrainingMapper;
 import com.gym.crm.model.Trainee;
 import com.gym.crm.model.Trainer;
@@ -60,12 +60,14 @@ class AnalyticsSenderTest {
     void checkIfProcessWorkloadForListTrainingIsCorrect() {
         List<Training> trainings = List.of(TRAINING);
         String action = "ADD";
+        ResponseEntity<String> mockResponse = ResponseEntity.ok("Success");
 
         when(mapper.toTrainerWorkloadRequest(TRAINING, action)).thenReturn(TRAINER_WORKLOAD);
+        when(trackerClient.sendWorkload(TRAINER_WORKLOAD)).thenReturn(mockResponse);
 
         String result = analyticsSender.processWorkload(trainings, action);
 
-        assertEquals("", result);
+        assertEquals("Success", result);
         verify(mapper).toTrainerWorkloadRequest(TRAINING, action);
         verify(trackerClient).sendWorkload(TRAINER_WORKLOAD);
     }
