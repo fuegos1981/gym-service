@@ -100,7 +100,7 @@ public class LoggingFilter implements Filter {
     }
 
     private boolean checkUrl(String url) {
-        return url.startsWith("/api/v1/trainee") || url.startsWith("/api/v1/trainer") || url.startsWith("/api/v1/training");
+        return url.startsWith("/api/v1/gym-crm-service/trainee") || url.startsWith("/api/v1/gym-crm-service/trainer") || url.startsWith("/api/v1/gym-crm-service/training");
     }
 
     static class ResettableStreamHttpServletRequest extends HttpServletRequestWrapper {

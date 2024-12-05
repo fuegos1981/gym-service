@@ -7,6 +7,7 @@ import com.gym.crm.exception.DatabaseException;
 import com.gym.crm.exception.EntityNotFoundException;
 import com.gym.crm.exception.RepositoryException;
 import com.gym.crm.exception.ServiceException;
+import com.gym.crm.exception.TrainingHoursTrackerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -53,6 +54,13 @@ public class ErrorHandler {
         ErrorResponse errorResponse = constructErrorResponse(SERVER_ERROR, ex);
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(TrainingHoursTrackerException.class)
+    public ResponseEntity<Object> handleTrainingHoursTrackerException(TrainingHoursTrackerException ex) {
+        ErrorResponse errorResponse = constructErrorResponse(SERVER_ERROR, ex);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     private ErrorResponse constructErrorResponse(CoreError coreError, RuntimeException exception) {

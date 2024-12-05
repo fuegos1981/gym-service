@@ -6,6 +6,7 @@ import com.gym.crm.exception.DatabaseException;
 import com.gym.crm.exception.EntityNotFoundException;
 import com.gym.crm.exception.RepositoryException;
 import com.gym.crm.exception.ServiceException;
+import com.gym.crm.exception.TrainingHoursTrackerException;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -89,6 +90,22 @@ class ErrorHandlerTest {
         ResponseEntity<Object> responseEntity = controllerAdvice.handleServerException(databaseException);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+
+        ErrorResponse errorResponse = (ErrorResponse) responseEntity.getBody();
+
+        assertEquals(errorMessage, errorResponse.getMessage());
+        assertEquals(errorCode, errorResponse.getCode());
+    }
+
+    @Test
+    void testHandleTrainingHoursTrackerException() {
+        String errorMessage = "Something went wrong";
+        String errorCode = "930";
+        TrainingHoursTrackerException trackerException = new TrainingHoursTrackerException(errorMessage);
+
+        ResponseEntity<Object> responseEntity = controllerAdvice.handleTrainingHoursTrackerException(trackerException);
+
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, responseEntity.getStatusCode());
 
         ErrorResponse errorResponse = (ErrorResponse) responseEntity.getBody();
 
