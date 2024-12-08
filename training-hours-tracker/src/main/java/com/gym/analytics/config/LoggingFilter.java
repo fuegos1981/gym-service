@@ -1,6 +1,6 @@
-package com.gym.crm.config;
+package com.gym.analytics.config;
 
-import com.gym.crm.constants.GlobalConstants;
+import com.gym.analytics.constants.GlobalConstants;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ReadListener;
@@ -39,29 +39,25 @@ public class LoggingFilter implements Filter {
             MDC.put(GlobalConstants.TRANSACTION_ID, transactionId);
         }
 
-        boolean hasBody = checkUrl(wrappedRequest.getRequestURI());
-
-        logRequest(wrappedRequest, transactionId, hasBody);
+        logRequest(wrappedRequest, transactionId);
 
         try {
             chain.doFilter(wrappedRequest, wrappedResponse);
         } finally {
-            logResponse(wrappedResponse, transactionId, hasBody);
+            logResponse(wrappedResponse, transactionId);
             wrappedResponse.copyBodyToResponse();
             MDC.clear();
         }
     }
 
-    public void logRequest(ResettableStreamHttpServletRequest request, String transactionId, boolean hasBody) throws IOException {
+    public void logRequest(ResettableStreamHttpServletRequest request, String transactionId) throws IOException {
         String requestBody;
 
-        if (!hasBody) {
-            requestBody = "";
-        } else if (request.getQueryString() == null) {
-            requestBody = hidePassword(IOUtils.toString(request.getReader()));
+        if (request.getQueryString() == null) {
+            requestBody = IOUtils.toString(request.getReader());
             request.resetInputStream();
         } else {
-            requestBody = hidePassword(request.getQueryString());
+            requestBody = request.getQueryString();
         }
 
         log.info("Incoming Request: [transactionId={}, method={}, URI={}, body={}]",
@@ -71,20 +67,10 @@ public class LoggingFilter implements Filter {
                 requestBody.isEmpty() ? "No Body" : requestBody);
     }
 
-    public String hidePassword(String body) {
-        return body.replaceAll("(?i)(password=)[^&]+", "$1**********")
-                .replaceAll("(?i)(Password\"\\s*:\\s*\")[^\"]+\"", "$1**********\"");
-    }
 
-    public void logResponse(ContentCachingResponseWrapper response, String transactionId, boolean hasBody) {
+    public void logResponse(ContentCachingResponseWrapper response, String transactionId) {
         int status = response.getStatus();
-        String responseBody;
-
-        if (!hasBody) {
-            responseBody = "";
-        } else {
-            responseBody = hidePassword(new String(response.getContentAsByteArray(), StandardCharsets.UTF_8));
-        }
+        String responseBody = new String(response.getContentAsByteArray(), StandardCharsets.UTF_8);
 
         if (status < 400) {
             log.info("Response: [transactionId={}, status={}, body={}]",
@@ -97,10 +83,6 @@ public class LoggingFilter implements Filter {
                     status,
                     responseBody.isEmpty() ? "No Body" : responseBody);
         }
-    }
-
-    private boolean checkUrl(String url) {
-        return url.startsWith("/api/v1/gym-crm-service/trainee") || url.startsWith("/api/v1/gym-crm-service/trainer") || url.startsWith("/api/v1/gym-crm-service/training");
     }
 
     static class ResettableStreamHttpServletRequest extends HttpServletRequestWrapper {

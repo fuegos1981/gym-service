@@ -39,6 +39,17 @@ public class User implements Serializable {
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", isActive=" + isActive +
+                '}';
+    }
 }
 
 

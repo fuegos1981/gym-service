@@ -1,10 +1,9 @@
-package com.gym.crm.config;
+package com.gym.analytics.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -16,14 +15,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class LoggingFilterTest {
-
     private LoggingFilter loggingFilter;
     private FilterChain mockFilterChain;
     private MockHttpServletRequest mockRequest;
@@ -40,35 +36,15 @@ class LoggingFilterTest {
     }
 
     @Test
-    public void testLogRequest_MasksPassword() throws IOException {
-        String requestBody = "username=user&password=secret123";
-        mockRequest.setContent(requestBody.getBytes(StandardCharsets.UTF_8));
-
-        loggingFilter.logRequest(wrappedRequest, UUID.randomUUID().toString(), true);
-
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        assertTrue(loggingFilter.hidePassword(requestBody).contains("password=**********"));
-    }
-
-    @Test
     public void testLogResponse_StatusOK() {
         ContentCachingResponseWrapper mockResp = mock(ContentCachingResponseWrapper.class);
         when(mockResp.getStatus()).thenReturn(HttpStatus.OK.value());
         when(mockResp.getContentAsByteArray()).thenReturn("success".getBytes(StandardCharsets.UTF_8));
 
-        loggingFilter.logResponse(mockResp, UUID.randomUUID().toString(), true);
+        loggingFilter.logResponse(mockResp, UUID.randomUUID().toString());
 
         String responseBody = new String(mockResp.getContentAsByteArray(), StandardCharsets.UTF_8);
         assertEquals("success", responseBody);
-    }
-
-    @Test
-    public void testHidePassword() {
-        String bodyWithPassword = "username=user&password=mySecretPassword123";
-        String hiddenBody = loggingFilter.hidePassword(bodyWithPassword);
-
-        assertTrue(hiddenBody.contains("password=**********"));
-        assertFalse(hiddenBody.contains("mySecretPassword123"));
     }
 
     @Test

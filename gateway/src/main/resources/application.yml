@@ -30,3 +30,12 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     prefer-ip-address: true
+
+logging:
+  file:
+    name: app.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg [transactionId=%X{X-Transaction-Id}]%n"
+  appender:
+    console:
+      name: STDOUT

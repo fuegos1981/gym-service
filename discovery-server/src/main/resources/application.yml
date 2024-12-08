@@ -9,3 +9,14 @@ eureka:
     hostname: localhost
     health-check-url-path: /actuator/health
     status-page-url-path: /actuator/info
+
+logging:
+  level:
+    root: INFO
+  file:
+    name: app.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg [transactionId=%X{X-Transaction-Id}]%n"
+  appender:
+    console:
+      name: STDOUT
