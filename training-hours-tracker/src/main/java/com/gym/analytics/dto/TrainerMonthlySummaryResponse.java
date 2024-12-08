@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @Builder
 @Data
+@ToString
 public class TrainerMonthlySummaryResponse implements Serializable {
 
     private String username;
