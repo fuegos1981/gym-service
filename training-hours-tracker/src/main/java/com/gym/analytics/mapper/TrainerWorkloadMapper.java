@@ -1,7 +1,7 @@
 package com.gym.analytics.mapper;
 
-import com.gym.analytics.model.TrainerWorkload;
 import com.gym.analytics.dto.TrainerWorkloadRequest;
+import com.gym.analytics.model.TrainerWorkload;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,7 +16,9 @@ public class TrainerWorkloadMapper {
                 .trainingDate(request.getTrainingDate())
                 .username(request.getUsername())
                 .isActive(request.getIsActive())
-                .trainingDuration((request.getActionType().equalsIgnoreCase(ADD_ACTION) ? 1 : -1) * request.getTrainingDuration())
+                .trainingDuration((request.getActionType().toString().equalsIgnoreCase(ADD_ACTION) ? 1.00 : -1.00) * request.getTrainingDuration())
                 .build();
     }
+
+
 }

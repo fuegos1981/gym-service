@@ -24,21 +24,25 @@ public class TrainerServiceImpl implements TrainerService {
 
     public TrainerMonthlySummaryResponse calculateMonthlySummary(String username) {
         List<TrainerWorkload> workloads = repository.findByUsernameOrderByTrainingDateAsc(username);
-
+        TrainingSummaryManager manager = new TrainingSummaryManager();
         if (workloads.size() == 0) {
             return null;
         }
 
         TrainerWorkload lastWorkload = workloads.get(workloads.size() - 1);
-        TrainerMonthlySummaryResponse response = TrainerMonthlySummaryResponse.builder()
-                .username(lastWorkload.getUsername())
-                .firstName(lastWorkload.getFirstName())
-                .lastName(lastWorkload.getLastName())
-                .Status(lastWorkload.getIsActive() ? TrainerMonthlySummaryResponse.Status.ACTIVE : TrainerMonthlySummaryResponse.Status.NOT_ACTIVE)
-                .build();
+        TrainerMonthlySummaryResponse response = new TrainerMonthlySummaryResponse(
+                lastWorkload.getUsername(),
+                lastWorkload.getFirstName(),
+                lastWorkload.getLastName(),
+                lastWorkload.getIsActive() ? TrainerMonthlySummaryResponse.StatusEnum.ACTIVE : TrainerMonthlySummaryResponse.StatusEnum.NOT_ACTIVE,
+        null);
 
-        workloads.forEach(w -> response.addDurationToYearlySummary(w.getTrainingDate(), w.getTrainingDuration()));
+       workloads.forEach(w -> manager.addDurationToYearlySummary(response, w.getTrainingDate(), w.getTrainingDuration()));
 
         return response;
     }
+
+
+
+
 }

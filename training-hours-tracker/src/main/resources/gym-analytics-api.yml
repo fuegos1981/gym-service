@@ -1,0 +1,136 @@
+openapi: 3.0.3
+info:
+  title: GYM ANALYTICS API
+  version: 1.0.0
+servers:
+  - url: http://localhost/api/v1
+    description: Version 1 of the API
+tags:
+  - name: Workload
+    description: Workload API routes
+paths:
+  /trainers/workload:
+    post:
+      summary: Handle workload
+      description: Save trainer workload information
+      operationId: handleWorkload
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainerWorkloadRequest'
+      responses:
+        '200':
+          description: Workload processed successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /trainers/{username}/summary:
+    get:
+      summary: Get monthly summary
+      description: Retrieve monthly summary for a specific trainer
+      operationId: getMonthlySummary
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: Username of the trainer
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Monthly summary retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainerMonthlySummaryResponse'
+
+components:
+  schemas:
+    TrainerWorkloadRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        isActive:
+          type: boolean
+        trainingDate:
+          type: string
+          format: date
+        trainingDuration:
+          type: number
+          format: double
+        actionType:
+          type: string
+          enum:
+            - ADD
+            - DELETE
+      example:
+        username: Anna.Saharova
+        firstName: Anna
+        lastName: Saharova
+        isActive: true
+        trainingDate: 2000-01-20
+        trainingDuration: 4.00
+        actionType: ADD
+    TrainerMonthlySummaryResponse:
+      type: object
+      properties:
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - NOT_ACTIVE
+        yearlySummaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/YearlySummary'
+      required:
+        - username
+        - firstName
+        - lastName
+        - status
+        - yearlySummaries
+    YearlySummary:
+      type: object
+      properties:
+        year:
+          type: integer
+        monthlySummaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/MonthlySummary'
+    MonthlySummary:
+        type: object
+        properties:
+          month:
+            type: string
+            enum:
+              - JANUARY
+              - FEBRUARY
+              - MARCH
+              - APRIL
+              - MAY
+              - JUNE
+              - JULY
+              - AUGUST
+              - SEPTEMBER
+              - OCTOBER
+              - NOVEMBER
+              - DECEMBER
+          totalDuration:
+            type: number
+            format: double

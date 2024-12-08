@@ -1,7 +1,9 @@
 package com.gym.analytics.impl;
 
+import com.gym.analytics.dto.MonthlySummary;
 import com.gym.analytics.dto.TrainerMonthlySummaryResponse;
 import com.gym.analytics.dto.TrainerWorkloadRequest;
+import com.gym.analytics.dto.YearlySummary;
 import com.gym.analytics.mapper.TrainerWorkloadMapper;
 import com.gym.analytics.model.TrainerWorkload;
 import com.gym.analytics.repository.TrainerWorkloadRepository;
@@ -14,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,15 +41,14 @@ class TrainerServiceImplTest {
 
     @Test
     void saveWorkload_ShouldSaveMappedEntity() {
-        TrainerWorkloadRequest request = TrainerWorkloadRequest.builder()
+        TrainerWorkloadRequest request = new TrainerWorkloadRequest()
                 .username(USERNAME)
                 .firstName("John")
                 .lastName("Doe")
                 .isActive(true)
                 .trainingDate(LocalDate.of(2024, 11, 23))
                 .trainingDuration(120.00)
-                .actionType("ADD")
-                .build();
+                .actionType(TrainerWorkloadRequest.ActionTypeEnum.ADD);
 
         TrainerWorkload mappedWorkload = buildTrainerWorkload(LocalDate.of(2024, 11, 23), 120);
 
@@ -77,21 +79,21 @@ class TrainerServiceImplTest {
         assertEquals(USERNAME, response.getUsername());
         assertEquals("John", response.getFirstName());
         assertEquals("Doe", response.getLastName());
-        assertEquals(TrainerMonthlySummaryResponse.Status.ACTIVE, response.getStatus());
+        assertEquals(TrainerMonthlySummaryResponse.StatusEnum.ACTIVE, response.getStatus());
         assertNotNull(response.getYearlySummaries());
         assertEquals(1, response.getYearlySummaries().size());
 
-        TrainerMonthlySummaryResponse.YearlySummary yearlySummary = response.getYearlySummaries().get(0);
+        YearlySummary yearlySummary = response.getYearlySummaries().get(0);
         assertEquals(2024, yearlySummary.getYear());
         assertEquals(2, yearlySummary.getMonthlySummaries().size());
 
-        TrainerMonthlySummaryResponse.MonthlySummary novemberSummary = yearlySummary.getMonthlySummaries().get(0);
+        MonthlySummary novemberSummary = yearlySummary.getMonthlySummaries().get(0);
         assertEquals(120, novemberSummary.getTotalDuration());
-        assertEquals(java.time.Month.NOVEMBER, novemberSummary.getMonth());
+        assertEquals(MonthlySummary.MonthEnum.NOVEMBER, novemberSummary.getMonth());
 
-        TrainerMonthlySummaryResponse.MonthlySummary decemberSummary = yearlySummary.getMonthlySummaries().get(1);
+        MonthlySummary decemberSummary = yearlySummary.getMonthlySummaries().get(1);
         assertEquals(90, decemberSummary.getTotalDuration());
-        assertEquals(java.time.Month.DECEMBER, decemberSummary.getMonth());
+        assertEquals(MonthlySummary.MonthEnum.DECEMBER, decemberSummary.getMonth());
     }
 
     @Test

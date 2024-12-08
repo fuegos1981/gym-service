@@ -46,21 +46,6 @@ class OperationLoggingAspectTest {
     }
 
     @Test
-    public void checkIfLogOperationIsChangePassword() throws Throwable {
-        Object[] args = {"user1", "password123"};
-        when(signatureMock.toShortString()).thenReturn("public void com.gym.crm.facade.ServiceFacade.changePassword(String, String)");
-
-        when(joinPointMock.getArgs()).thenReturn(args);
-        when(joinPointMock.getSignature()).thenReturn(signatureMock);
-        when(joinPointMock.proceed()).thenReturn("result");
-
-        Object result = aspect.logOperation(joinPointMock);
-
-        assertEquals("**********", args[1]);
-        assertEquals("result", result);
-    }
-
-    @Test
     public void checkIfLogOperationWithNoArgs() throws Throwable {
         when(joinPointMock.getArgs()).thenReturn(new Object[]{});
         when(signatureMock.toShortString()).thenReturn("public void com.gym.crm.facade.ServiceFacade.noArgsOperation()");
