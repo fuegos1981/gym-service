@@ -1,7 +1,9 @@
 package com.gym.analytics.controller;
 
+import com.gym.analytics.dto.MonthlySummary;
 import com.gym.analytics.dto.TrainerMonthlySummaryResponse;
 import com.gym.analytics.dto.TrainerWorkloadRequest;
+import com.gym.analytics.dto.YearlySummary;
 import com.gym.analytics.service.TrainerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,11 +35,10 @@ class TrainerControllerTest {
 
     @Test
     void handleWorkload_ShouldProcessWorkloadSuccessfully() {
-        TrainerWorkloadRequest workloadRequest = TrainerWorkloadRequest.builder()
+        TrainerWorkloadRequest workloadRequest = new TrainerWorkloadRequest()
                 .username(USERNAME)
                 .trainingDate(LocalDate.of(2024, 11, 23))
-                .trainingDuration(120.00)
-                .build();
+                .trainingDuration(120.00);
 
         doNothing().when(trainerService).saveWorkload(workloadRequest);
 
@@ -62,19 +62,18 @@ class TrainerControllerTest {
     }
 
     private TrainerMonthlySummaryResponse createMockMonthlySummaryResponse() {
-        TrainerMonthlySummaryResponse response = TrainerMonthlySummaryResponse.builder()
+        TrainerMonthlySummaryResponse response = new TrainerMonthlySummaryResponse()
                 .username(USERNAME)
                 .firstName("John")
                 .lastName("Doe")
-                .Status(TrainerMonthlySummaryResponse.Status.ACTIVE)
-                .build();
+                .status(TrainerMonthlySummaryResponse.StatusEnum.ACTIVE);
 
-        List<TrainerMonthlySummaryResponse.YearlySummary> yearlySummaries = new ArrayList<>();
-        TrainerMonthlySummaryResponse.YearlySummary yearlySummary = new TrainerMonthlySummaryResponse.YearlySummary();
+        List<YearlySummary> yearlySummaries = new ArrayList<>();
+        YearlySummary yearlySummary = new YearlySummary();
         yearlySummary.setYear(2024);
 
-        List<TrainerMonthlySummaryResponse.MonthlySummary> monthlySummaries = new ArrayList<>();
-        monthlySummaries.add(new TrainerMonthlySummaryResponse.MonthlySummary(Month.NOVEMBER, 180.00));
+        List<MonthlySummary> monthlySummaries = new ArrayList<>();
+        monthlySummaries.add(new MonthlySummary().month(MonthlySummary.MonthEnum.NOVEMBER).totalDuration(180.00));
         yearlySummary.setMonthlySummaries(monthlySummaries);
 
         yearlySummaries.add(yearlySummary);

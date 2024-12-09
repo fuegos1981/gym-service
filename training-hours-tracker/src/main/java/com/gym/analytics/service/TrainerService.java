@@ -5,7 +5,7 @@ import com.gym.analytics.dto.TrainerWorkloadRequest;
 
 public interface TrainerService {
 
-    public void saveWorkload(TrainerWorkloadRequest workload);
+    void saveWorkload(TrainerWorkloadRequest workload);
 
-    public TrainerMonthlySummaryResponse calculateMonthlySummary(String username);
+    TrainerMonthlySummaryResponse calculateMonthlySummary(String username);
 }

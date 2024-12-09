@@ -32,14 +32,13 @@ public class TrainingMapper {
     public TrainerWorkloadRequest toTrainerWorkloadRequest(Training training, String action) {
         User user = training.getTrainer().getUser();
 
-        return TrainerWorkloadRequest.builder()
+        return new TrainerWorkloadRequest()
                 .username(user.getUsername())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .isActive(user.getIsActive())
                 .trainingDate(training.getTrainingDate())
                 .trainingDuration(training.getDuration())
-                .actionType(action)
-                .build();
+                .actionType(TrainerWorkloadRequest.ActionTypeEnum.valueOf(action.toUpperCase()));
     }
 }

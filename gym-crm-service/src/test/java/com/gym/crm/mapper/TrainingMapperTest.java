@@ -58,7 +58,7 @@ class TrainingMapperTest {
         assertEquals(TRAINING.getTrainer().getUser().getFirstName(), actual.getFirstName());
         assertEquals(TRAINING.getTrainer().getUser().getLastName(), actual.getLastName());
         assertEquals(TRAINING.getTrainingDate(), actual.getTrainingDate());
-        assertEquals(action, actual.getActionType());
+        assertEquals(action, actual.getActionType().toString());
         assertEquals(TRAINING.getDuration(), actual.getTrainingDuration());
     }
 

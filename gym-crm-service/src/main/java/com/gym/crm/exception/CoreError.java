@@ -6,7 +6,8 @@ public enum CoreError {
     ENTITY_NOT_FOUND_ERROR("710"),
     REPOSITORY_ERROR("853"),
     SERVER_ERROR("930"),
-    SERVICE_ERROR("900");
+    SERVICE_ERROR("900"),
+    TIMEOUT_ERROR("945");
 
     private final String code;
 

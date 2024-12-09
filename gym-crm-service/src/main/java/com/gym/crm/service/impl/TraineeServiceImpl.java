@@ -171,7 +171,7 @@ public class TraineeServiceImpl implements TraineeService {
             throw new ServiceException("Username trainee cannot be null");
         }
 
-        return repository.findByUserUsername(username).orElse(null);
+        return repository.findByUserUsername(username).orElseThrow(() -> new EntityNotFoundException(format("Trainee: %s not found in Repository", username)));
     }
 
     public List<Trainer> getTrainersNotAssignedForTrainee(String username) {

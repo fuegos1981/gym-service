@@ -22,13 +22,18 @@ eureka:
     prefer-ip-address: true
 api:
   version: /api/v1/training-hours-tracker
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /api/v1/training-hours-tracker/swagger-ui.html
 logging:
   level:
     root: INFO
   file:
     name: app.log
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg [transactionId=%X{transactionId}]%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg [transactionId=%X{X-Transaction-Id}]%n"
   appender:
     console:
       name: STDOUT

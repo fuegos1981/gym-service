@@ -73,14 +73,14 @@ class AnalyticsSenderTest {
     }
 
     private static TrainerWorkloadRequest buildTrainerWorkloadRequest() {
-        return TrainerWorkloadRequest.builder()
+        return new TrainerWorkloadRequest()
                 .firstName("Oleg")
                 .lastName("Bodov")
                 .username("Oleg.Bodov")
                 .trainingDate(LocalDate.of(2024, 10, 10))
                 .trainingDuration(2.0)
-                .actionType("ADD")
-                .isActive(true).build();
+                .actionType(TrainerWorkloadRequest.ActionTypeEnum.ADD)
+                .isActive(true);
     }
 
     private static User buildUser(String firstName, String lastname, String password) {
