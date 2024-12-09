@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static java.lang.String.format;
+
 @Service
 @AllArgsConstructor
 public class TrainerServiceImpl implements TrainerService {
@@ -101,7 +103,7 @@ public class TrainerServiceImpl implements TrainerService {
             throw new ServiceException("Username trainer cannot be null");
         }
 
-        return repository.findByUserUsername(username).orElse(null);
+        return repository.findByUserUsername(username).orElseThrow(() -> new EntityNotFoundException(format("Trainer: %s not found in Repository", username)));
     }
 
     @Override

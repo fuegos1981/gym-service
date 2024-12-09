@@ -117,6 +117,22 @@ class ErrorHandlerTest {
     }
 
     @Test
+    void testHandleRuntimeException() throws SocketTimeoutException {
+        String errorMessage = "Something went wrong";
+        String errorCode = "500";
+        RuntimeException runtimeException = new RuntimeException(errorMessage);
+
+        ResponseEntity<Object> responseEntity = controllerAdvice.handleRuntimeException(runtimeException);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+
+        ErrorResponse errorResponse = (ErrorResponse) responseEntity.getBody();
+
+        assertEquals(errorMessage, errorResponse.getMessage());
+        assertEquals(errorCode, errorResponse.getCode());
+    }
+
+    @Test
     void testHandleSocketTimeoutException() {
         String errorMessage = "Request timed out. Please try again later.";
         String errorCode = "945";

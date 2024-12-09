@@ -89,6 +89,17 @@ public class ErrorHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) throws SocketTimeoutException {
+        if (ex.getCause() instanceof SocketTimeoutException) {
+            return handleTimeoutException((SocketTimeoutException) ex.getCause());
+        }
+
+        ErrorResponse errorResponse = constructErrorResponse(CoreError.GENERAL_ERROR, ex);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(SocketTimeoutException.class)
     public ResponseEntity<Object> handleTimeoutException(SocketTimeoutException ex) {
         ErrorResponse errorResponse = new ErrorResponse()
