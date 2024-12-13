@@ -1,14 +1,14 @@
 package com.gym.crm.service.impl;
 
 import com.gym.analytics.dto.TrainerWorkloadRequest;
-import com.gym.crm.controller.TrainingHoursTrackerClient;
+import com.gym.crm.constants.GlobalConstants;
 import com.gym.crm.exception.TrainingHoursTrackerException;
 import com.gym.crm.mapper.TrainingMapper;
 import com.gym.crm.model.Training;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.slf4j.MDC;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,14 +20,25 @@ import java.util.stream.Collectors;
 public class AnalyticsSender {
 
     private final TrainingMapper mapper;
-    private final TrainingHoursTrackerClient trackerClient;
+    private final JmsTemplate jmsTemplate;
 
-    @CircuitBreaker(name = "trackerClient", fallbackMethod = "fallbackProcessWorkload")
     public String processWorkload(Training training, String action) {
-        TrainerWorkloadRequest request = mapper.toTrainerWorkloadRequest(training, action);
-        ResponseEntity<String> response = trackerClient.sendWorkload(request);
+        String transactionId = MDC.get(GlobalConstants.TRANSACTION_ID);
 
-        return response.getBody();
+        try {
+            TrainerWorkloadRequest request = mapper.toTrainerWorkloadRequest(training, action);
+
+            jmsTemplate.convertAndSend("training-hours-queue", request, message -> {
+                message.setStringProperty("transactionId", transactionId);
+                return message;
+            });
+            log.info("Transaction ID: {}. Workload for Training: {}, Action: {} sent to queue.",
+                    transactionId, training.getName(), action);
+
+            return "Message sent to queue successfully.";
+        } catch (Exception e) {
+            return fallbackProcessWorkload(transactionId, training, action, e);
+        }
     }
 
     public String processWorkload(List<Training> trainings, String action) {
@@ -36,9 +47,9 @@ public class AnalyticsSender {
                 .collect(Collectors.joining("\n"));
     }
 
-    public String fallbackProcessWorkload(Training training, String action, Throwable throwable) {
-        log.error("Fallback executed for Training: {}, Action: {}",
-                training.getName(), action, throwable.getMessage());
+    public String fallbackProcessWorkload(String transactionId, Training training, String action, Throwable throwable) {
+        log.error("Transaction ID: {}. Fallback executed for Training: {}, Action: {}, Error: {}",
+                transactionId, training.getName(), action, throwable.getMessage());
         throw new TrainingHoursTrackerException("Can't send statistics to Training-Hours-Tracker", throwable);
     }
 }

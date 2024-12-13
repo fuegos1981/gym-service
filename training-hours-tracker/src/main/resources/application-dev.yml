@@ -2,11 +2,6 @@ spring:
   config:
     activate:
       on-profile: dev
-  datasource:
-    url: ${DEV_DB_URL}
-    username: ${DEV_DB_USERNAME}
-    password: ${DEV_DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
   activemq:
     broker-url: ${DEV_BROKER_URL}
     user: ${DEV_USER}
@@ -14,7 +9,7 @@ spring:
     packages:
       trust-all: true
 server:
-  port: 8082
+  port: 8087
 logging:
   level:
     root: DEBUG

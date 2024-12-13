@@ -1,6 +1,10 @@
 spring:
   application:
     name: training-hours-tracker
+  config:
+    import: optional:file:.env[.properties]
+  profiles:
+    active: stg
   h2:
     console:
       enabled: true
@@ -12,8 +16,11 @@ spring:
     jpa:
       hibernate:
         ddl-auto: update
-server:
-  port: 8086
+  jms:
+    listener:
+      concurrency: 5
+      max-concurrency: 5
+      prefetch: 50
 eureka:
   client:
     service-url:

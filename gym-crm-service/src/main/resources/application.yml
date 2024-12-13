@@ -73,20 +73,5 @@ scrape_configs:
 app:
   root:
     url: http://localhost:8080
-  analytic_username: temp
-  analytic_password: temp
 jwt:
   secret: my-secure-secret-key-which-is-shared
-resilience4j:
-  circuitbreaker:
-    instances:
-      training-hours-tracker:
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 10s
-        sliding-window-size: 10
-feign:
-  client:
-    config:
-      default:
-        connect-timeout: 5000
-        read-timeout: 5000

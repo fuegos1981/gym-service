@@ -27,6 +27,8 @@ paths:
             text/plain:
               schema:
                 type: string
+        default:
+          $ref: '#/components/responses/ErrorResponse'
 
   /trainers/{username}/summary:
     get:
@@ -134,3 +136,21 @@ components:
           totalDuration:
             type: number
             format: double
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: error code
+          example: 930
+        message:
+          type: string
+          description: Error message
+          example: An unexpected error occurred
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
