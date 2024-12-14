@@ -1,25 +1,36 @@
 package com.gym.crm.service.impl;
 
 import com.gym.analytics.dto.TrainerWorkloadRequest;
-import com.gym.crm.controller.TrainingHoursTrackerClient;
+import com.gym.crm.constants.GlobalConstants;
 import com.gym.crm.mapper.TrainingMapper;
 import com.gym.crm.model.Trainee;
 import com.gym.crm.model.Trainer;
 import com.gym.crm.model.Training;
 import com.gym.crm.model.TrainingType;
 import com.gym.crm.model.User;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
+import org.slf4j.MDC;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessagePostProcessor;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,40 +47,50 @@ class AnalyticsSenderTest {
     private TrainingMapper mapper;
 
     @Mock
-    private TrainingHoursTrackerClient trackerClient;
+    private JmsTemplate jmsTemplate;
 
     @InjectMocks
     private AnalyticsSender analyticsSender;
 
+    @Captor
+    private ArgumentCaptor<MessagePostProcessor> messagePostProcessorCaptor;
+
     @Test
-    void checkIfProcessWorkloadForSingleTrainingIsCorrect() {
+    void checkIfProcessWorkloadForSingleTrainingIsCorrect() throws JMSException {
         String action = "ADD";
-        ResponseEntity<String> mockResponse = ResponseEntity.ok("Success");
+        String transactionId = "12345";
+
+        MockedStatic<MDC> mdcMock = mockStatic(MDC.class);
+        mdcMock.when(() -> MDC.get(GlobalConstants.TRANSACTION_ID)).thenReturn(transactionId);
 
         when(mapper.toTrainerWorkloadRequest(TRAINING, action)).thenReturn(TRAINER_WORKLOAD);
-        when(trackerClient.sendWorkload(TRAINER_WORKLOAD)).thenReturn(mockResponse);
 
         String result = analyticsSender.processWorkload(TRAINING, action);
 
-        assertEquals("Success", result);
-        verify(mapper).toTrainerWorkloadRequest(TRAINING, action);
-        verify(trackerClient).sendWorkload(TRAINER_WORKLOAD);
+        assertEquals("Message sent to queue successfully.", result);
+        verify(jmsTemplate).convertAndSend(eq("training-hours-queue"), eq(TRAINER_WORKLOAD), messagePostProcessorCaptor.capture());
+
+        MessagePostProcessor postProcessor = messagePostProcessorCaptor.getValue();
+        Message mockMessage = mock(Message.class);
+        postProcessor.postProcessMessage(mockMessage);
+
+        verify(mockMessage).setStringProperty("transactionId", transactionId);
+        verifyNoMoreInteractions(jmsTemplate);
+
     }
 
     @Test
     void checkIfProcessWorkloadForListTrainingIsCorrect() {
         List<Training> trainings = List.of(TRAINING);
         String action = "ADD";
-        ResponseEntity<String> mockResponse = ResponseEntity.ok("Success");
 
         when(mapper.toTrainerWorkloadRequest(TRAINING, action)).thenReturn(TRAINER_WORKLOAD);
-        when(trackerClient.sendWorkload(TRAINER_WORKLOAD)).thenReturn(mockResponse);
 
         String result = analyticsSender.processWorkload(trainings, action);
 
-        assertEquals("Success", result);
+        assertEquals("Message sent to queue successfully.", result);
         verify(mapper).toTrainerWorkloadRequest(TRAINING, action);
-        verify(trackerClient).sendWorkload(TRAINER_WORKLOAD);
+        verify(jmsTemplate).convertAndSend(eq("training-hours-queue"), eq(TRAINER_WORKLOAD), messagePostProcessorCaptor.capture());
     }
 
     private static TrainerWorkloadRequest buildTrainerWorkloadRequest() {
