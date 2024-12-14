@@ -16,15 +16,18 @@ public class AppConfig {
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
+
         return mapper;
     }
 
     @Bean
     public MappingJackson2MessageConverter messageConverter(ObjectMapper objectMapper) {
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+
         converter.setTargetType(MessageType.TEXT);
         converter.setTypeIdPropertyName("_type");
         converter.setObjectMapper(objectMapper);
+
         return converter;
     }
 }

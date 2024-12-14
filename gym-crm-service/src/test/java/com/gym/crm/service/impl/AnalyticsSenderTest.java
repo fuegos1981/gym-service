@@ -56,29 +56,27 @@ class AnalyticsSenderTest {
     private ArgumentCaptor<MessagePostProcessor> messagePostProcessorCaptor;
 
     @Test
-    void checkIfProcessWorkloadForSingleTrainingIsCorrect() {
+    void checkIfProcessWorkloadForSingleTrainingIsCorrect() throws JMSException {
         String action = "ADD";
         String transactionId = "12345";
 
-        try (MockedStatic<MDC> mdcMock = mockStatic(MDC.class)) {
-            mdcMock.when(() -> MDC.get(GlobalConstants.TRANSACTION_ID)).thenReturn(transactionId);
+        MockedStatic<MDC> mdcMock = mockStatic(MDC.class);
+        mdcMock.when(() -> MDC.get(GlobalConstants.TRANSACTION_ID)).thenReturn(transactionId);
 
-            when(mapper.toTrainerWorkloadRequest(TRAINING, action)).thenReturn(TRAINER_WORKLOAD);
+        when(mapper.toTrainerWorkloadRequest(TRAINING, action)).thenReturn(TRAINER_WORKLOAD);
 
-            String result = analyticsSender.processWorkload(TRAINING, action);
+        String result = analyticsSender.processWorkload(TRAINING, action);
 
-            assertEquals("Message sent to queue successfully.", result);
-            verify(jmsTemplate).convertAndSend(eq("training-hours-queue"), eq(TRAINER_WORKLOAD), messagePostProcessorCaptor.capture());
+        assertEquals("Message sent to queue successfully.", result);
+        verify(jmsTemplate).convertAndSend(eq("training-hours-queue"), eq(TRAINER_WORKLOAD), messagePostProcessorCaptor.capture());
 
-            MessagePostProcessor postProcessor = messagePostProcessorCaptor.getValue();
-            Message mockMessage = mock(Message.class);
-            postProcessor.postProcessMessage(mockMessage);
+        MessagePostProcessor postProcessor = messagePostProcessorCaptor.getValue();
+        Message mockMessage = mock(Message.class);
+        postProcessor.postProcessMessage(mockMessage);
 
-            verify(mockMessage).setStringProperty("transactionId", transactionId);
-            verifyNoMoreInteractions(jmsTemplate);
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
+        verify(mockMessage).setStringProperty("transactionId", transactionId);
+        verifyNoMoreInteractions(jmsTemplate);
+
     }
 
     @Test
