@@ -5,9 +5,9 @@ import com.gym.crm.GymApplication;
 import com.gym.crm.dto.AddTrainingsRequest;
 import com.gym.crm.facade.ServiceFacade;
 import com.gym.crm.model.Training;
+import com.gym.crm.security.JwtFilter;
 import com.gym.crm.security.JwtProvider;
 import com.gym.crm.service.impl.CustomUserDetailsService;
-import com.gym.crm.service.impl.TokenBlacklistService;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -33,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(TrainingController.class)
 @ContextConfiguration(classes = GymApplication.class)
 @Import(TestSecurityConfig.class)
+@TestPropertySource(properties = "gateway.secret=test-secret-key")
 class TrainingControllerTest {
 
     private static final String API_VERSION = "/api/v1/gym-crm-service";
@@ -47,8 +49,6 @@ class TrainingControllerTest {
     private MeterRegistry meterRegistry;
     @MockBean
     private JwtProvider jwtProvider;
-    @MockBean
-    private TokenBlacklistService tokenBlacklistService;
     @MockBean
     private CustomUserDetailsService userDetailsService;
     @Mock
@@ -74,6 +74,7 @@ class TrainingControllerTest {
         when(service.createTraining(any(AddTrainingsRequest.class))).thenReturn(new Training());
 
         mockMvc.perform(MockMvcRequestBuilders.post(API_VERSION + "/training/create")
+                        .header("Gateway", "test-secret-key")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());

@@ -11,11 +11,10 @@ import com.gym.crm.dto.UpdateTrainerRequest;
 import com.gym.crm.dto.UpdateTrainerResponse;
 import com.gym.crm.dto.UserDetailsResponse;
 import com.gym.crm.facade.ServiceFacade;
+import com.gym.crm.security.JwtFilter;
 import com.gym.crm.security.JwtProvider;
-import com.gym.crm.security.LogoutProvider;
 import com.gym.crm.security.TokenAuthenticator;
 import com.gym.crm.service.impl.CustomUserDetailsService;
-import com.gym.crm.service.impl.TokenBlacklistService;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +27,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -50,6 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(TrainerController.class)
 @ContextConfiguration(classes = GymApplication.class)
 @Import(TestSecurityConfig.class)
+@TestPropertySource(properties = "gateway.secret=test-secret-key")
 class TrainerControllerTest {
 
     private static final String API_VERSION = "/api/v1/gym-crm-service";
@@ -65,15 +66,11 @@ class TrainerControllerTest {
     @MockBean
     private JwtProvider jwtProvider;
     @MockBean
-    private TokenBlacklistService tokenBlacklistService;
-    @MockBean
     private CustomUserDetailsService userDetailsService;
     @Mock
     private Counter serverErrorCounter;
     @Mock
     private Counter incorrectLoginCounter;
-    @MockBean
-    private LogoutProvider logoutProvider;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -97,6 +94,7 @@ class TrainerControllerTest {
                 .specialization(TrainingType.BOX);
 
         mockMvc.perform(MockMvcRequestBuilders.post(API_VERSION + "/trainer/register")
+                        .header("Gateway", "test-secret-key")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -110,6 +108,7 @@ class TrainerControllerTest {
         when(service.changePasswordTrainer(eq("testUser"), eq("2222222222"))).thenReturn(true);
 
         mockMvc.perform(MockMvcRequestBuilders.put(API_VERSION + "/trainer/change-login")
+                        .header("Gateway", "test-secret-key")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\": \"testUser\", \"newPassword\": \"2222222222\"}")
                         .session(session))
@@ -124,7 +123,8 @@ class TrainerControllerTest {
 
         mockMvc.perform(get(API_VERSION + "/trainer/login")
                         .param("username", "testUser")
-                        .param("password", "2222222222"))
+                        .param("password", "2222222222")
+                        .header("Gateway", "test-secret-key"))
                 .andExpect(status().isOk());
     }
 
@@ -140,7 +140,8 @@ class TrainerControllerTest {
         when(service.findTrainerByUsername(anyString())).thenReturn(mockResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get(API_VERSION + "/trainer/Oleg.Petrov")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Gateway", "test-secret-key"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.lastName").value("Petrov"))
                 .andExpect(jsonPath("$.firstName").value("Oleg"));
@@ -165,6 +166,7 @@ class TrainerControllerTest {
                 .specialization(TrainingType.BOX);
 
         mockMvc.perform(MockMvcRequestBuilders.put(API_VERSION + "/trainer/update")
+                        .header("Gateway", "test-secret-key")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -184,7 +186,8 @@ class TrainerControllerTest {
                         .param("username", "testUser")
                         .param("periodFrom", "2024-10-01")
                         .param("periodTo", "2024-10-10")
-                        .param("traineeName", "testTrainee"))
+                        .param("traineeName", "testTrainee")
+                        .header("Gateway", "test-secret-key"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].trainingName").value("Mock Training"));
     }
@@ -195,7 +198,8 @@ class TrainerControllerTest {
 
         mockMvc.perform(patch(API_VERSION + "/trainer/activate")
                         .param("username", "testUser")
-                        .param("isActive", "true"))
+                        .param("isActive", "true")
+                        .header("Gateway", "test-secret-key"))
                 .andExpect(status().isOk());
     }
 
@@ -207,6 +211,7 @@ class TrainerControllerTest {
         when(service.getTrainingTypes()).thenReturn(mockResponse);
 
         mockMvc.perform(get(API_VERSION + "/trainer/training-types")
+                        .header("Gateway", "test-secret-key")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Box"));

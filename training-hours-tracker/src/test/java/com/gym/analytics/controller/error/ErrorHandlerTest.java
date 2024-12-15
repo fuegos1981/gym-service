@@ -1,34 +1,47 @@
 package com.gym.analytics.controller.error;
 
 import com.gym.analytics.dto.ErrorResponse;
-import com.gym.analytics.exception.CoreError;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.net.SocketTimeoutException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class ErrorHandlerTest {
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
-        if (ex.getCause() instanceof SocketTimeoutException) {
-            return handleTimeoutException((SocketTimeoutException) ex.getCause());
-        }
 
-        ErrorResponse errorResponse = constructErrorResponse(CoreError.GENERAL_ERROR, ex);
+    private final ErrorHandler controllerAdvice = new ErrorHandler();
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    @Test
+    void testHandleRuntimeException() {
+        String errorMessage = "Something went wrong";
+        String errorCode = "500";
+        RuntimeException runtimeException = new RuntimeException(errorMessage);
+
+        ResponseEntity<Object> responseEntity = controllerAdvice.handleRuntimeException(runtimeException);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+
+        ErrorResponse errorResponse = (ErrorResponse) responseEntity.getBody();
+
+        assertEquals(errorMessage, errorResponse.getMessage());
+        assertEquals(errorCode, errorResponse.getCode());
     }
 
-    @ExceptionHandler(SocketTimeoutException.class)
-    public ResponseEntity<Object> handleTimeoutException(SocketTimeoutException ex) {
-        ErrorResponse errorResponse = new ErrorResponse()
-                .code(CoreError.TIMEOUT_ERROR.getCode())
-                .message("Request timed out. Please try again later.");
-        return new ResponseEntity<>(errorResponse, HttpStatus.GATEWAY_TIMEOUT);
-    }
+    @Test
+    void testHandleSocketTimeoutException() {
+        String errorMessage = "Request timed out. Please try again later.";
+        String errorCode = "945";
+        SocketTimeoutException timeoutException = new SocketTimeoutException(errorMessage);
 
-    private ErrorResponse constructErrorResponse(CoreError coreError, RuntimeException exception) {
-        return new ErrorResponse().code(coreError.getCode()).message(exception.getMessage());
+        ResponseEntity<Object> responseEntity = controllerAdvice.handleTimeoutException(timeoutException);
+
+        assertEquals(HttpStatus.GATEWAY_TIMEOUT, responseEntity.getStatusCode());
+
+        ErrorResponse errorResponse = (ErrorResponse) responseEntity.getBody();
+
+        assertEquals(errorMessage, errorResponse.getMessage());
+        assertEquals(errorCode, errorResponse.getCode());
     }
 }

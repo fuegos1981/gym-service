@@ -3,6 +3,8 @@ server:
   max-http-header-size: 65536
 
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: api-gateway
   cloud:
@@ -24,6 +26,12 @@ spring:
           uri: lb://gym-crm-service
           predicates:
             - Path=/actuator/**
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/gym
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    flyway:
+      enabled: false
 eureka:
   client:
     service-url:
@@ -39,3 +47,7 @@ logging:
   appender:
     console:
       name: STDOUT
+jwt:
+  secret: my-secure-secret-key-which-is-shared
+gateway:
+  secret: my-secure-gateway-secret-key-which-is-shared

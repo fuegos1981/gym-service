@@ -13,7 +13,6 @@ import com.gym.crm.dto.UpdateTraineesTrainersRequest;
 import com.gym.crm.dto.UpdateTraineesTrainersResponseInner;
 import com.gym.crm.dto.UserDetailsResponse;
 import com.gym.crm.facade.ServiceFacade;
-import com.gym.crm.security.LogoutProvider;
 import com.gym.crm.security.TokenAuthenticator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -24,6 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +49,6 @@ public class TraineeController {
 
     private final ServiceFacade service;
     private final TokenAuthenticator tokenAuthenticator;
-    private final LogoutProvider logoutProvider;
 
     @Operation(operationId = "registerTrainee",
             summary = "Register a new trainee",
@@ -267,6 +266,6 @@ public class TraineeController {
     @GetMapping(value = "/logout", produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public void logout(HttpServletRequest request) {
-        logoutProvider.execute(request);
+        SecurityContextHolder.clearContext();
     }
 }

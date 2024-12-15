@@ -1,5 +1,6 @@
-package com.gym.analytics.security;
+package com.gym.app.filter;
 
+import com.gym.app.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,14 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,7 +25,7 @@ class JwtProviderTest {
     private String token;
 
     @Mock
-    private UserDetails userDetails;
+    private User user;
 
     @BeforeEach
     void setUp() {
@@ -50,8 +48,8 @@ class JwtProviderTest {
 
     @Test
     void validateToken_shouldReturnTrueForValidToken() {
-        when(userDetails.getUsername()).thenReturn(USERNAME);
-        boolean isValid = jwtProvider.validateToken(token, userDetails);
+        when(user.getUsername()).thenReturn(USERNAME);
+        boolean isValid = jwtProvider.validateToken(token, user);
         assertTrue(isValid);
     }
 
@@ -64,4 +62,5 @@ class JwtProviderTest {
                 .signWith(key)
                 .compact();
     }
+
 }

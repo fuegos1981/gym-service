@@ -1,20 +1,18 @@
-package com.gym.analytics.security;
+package com.gym.app.filter;
 
+import com.gym.app.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.function.Function;
 
 @Component
-public class JwtProvider implements Serializable {
-
+public class JwtProvider {
     private final SecretKey secretKey;
 
     public JwtProvider(@Value("${jwt.secret}") String secret) {
@@ -50,8 +48,9 @@ public class JwtProvider implements Serializable {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, User user) {
         final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        return username.equals(user.getUsername()) && !isTokenExpired(token);
     }
+
 }
