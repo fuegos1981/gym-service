@@ -1,4 +1,4 @@
-package com.gym.crm.service.impl;
+package com.gym.app.service;
 
 import org.springframework.stereotype.Service;
 
@@ -17,4 +17,5 @@ public class TokenBlacklistService {
     public boolean isTokenBlacklisted(String token) {
         return blacklistedTokens.contains(token);
     }
+
 }

@@ -1,4 +1,4 @@
-package com.gym.crm.service.impl;
+package com.gym.app.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,4 +27,5 @@ class TokenBlacklistServiceTest {
     void checkIfTokenNotInBlacklist() {
         assertFalse(tokenBlacklistService.isTokenBlacklisted(TOKEN));
     }
+
 }

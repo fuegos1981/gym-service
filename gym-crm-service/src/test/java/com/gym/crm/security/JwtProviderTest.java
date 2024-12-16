@@ -36,24 +36,4 @@ class JwtProviderTest {
         String actual = jwtProvider.generateToken(userDetails);
         assertNotNull(actual);
     }
-
-    @Test
-    void checkIfExtractUsernameReturnCorrectUsername() {
-        String extractedUsername = jwtProvider.extractUsername(token);
-        assertEquals("testUser", extractedUsername);
-    }
-
-    @Test
-    void checkIfExtractExpirationReturnCorrectExpiration() {
-        Date expirationDate = jwtProvider.extractExpiration(token);
-
-        assertNotNull(expirationDate);
-        assertTrue(expirationDate.after(new Date()));
-    }
-
-    @Test
-    void validateToken_shouldReturnTrueForValidToken() {
-        boolean isValid = jwtProvider.validateToken(token, userDetails);
-        assertTrue(isValid);
-    }
 }

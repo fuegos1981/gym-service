@@ -16,10 +16,8 @@ import com.gym.crm.dto.UpdateTraineesTrainersResponseInner;
 import com.gym.crm.dto.UserDetailsResponse;
 import com.gym.crm.facade.ServiceFacade;
 import com.gym.crm.security.JwtProvider;
-import com.gym.crm.security.LogoutProvider;
 import com.gym.crm.security.TokenAuthenticator;
 import com.gym.crm.service.impl.CustomUserDetailsService;
-import com.gym.crm.service.impl.TokenBlacklistService;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +30,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -56,6 +55,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(TraineeController.class)
 @ContextConfiguration(classes = GymApplication.class)
 @Import(TestSecurityConfig.class)
+@TestPropertySource(properties = "gateway.secret=test-secret-key")
 class TraineeControllerTest {
 
     private static final String API_VERSION = "/api/v1/gym-crm-service";
@@ -69,15 +69,11 @@ class TraineeControllerTest {
     @MockBean
     private JwtProvider jwtProvider;
     @MockBean
-    private TokenBlacklistService tokenBlacklistService;
-    @MockBean
     private CustomUserDetailsService userDetailsService;
     @Mock
     private Counter serverErrorCounter;
     @Mock
     private Counter incorrectLoginCounter;
-    @MockBean
-    private LogoutProvider logoutProvider;
     @MockBean
     private ServiceFacade service;
     @Autowired
@@ -104,6 +100,7 @@ class TraineeControllerTest {
                 .dateOfBirth(LocalDate.of(2000, 11, 1));
 
         mockMvc.perform(MockMvcRequestBuilders.post(API_VERSION + "/trainee/register")
+                        .header("Gateway", "test-secret-key")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -118,6 +115,7 @@ class TraineeControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.put(API_VERSION + "/trainee/change-login")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Gateway", "test-secret-key")
                         .content("{\"username\": \"testUser\", \"newPassword\": \"2222222222\"}")
                         .session(session))
                 .andExpect(status().isOk());
@@ -130,6 +128,7 @@ class TraineeControllerTest {
         MockHttpSession session = mock(MockHttpSession.class);
 
         mockMvc.perform(get(API_VERSION + "/trainee/login")
+                        .header("Gateway", "test-secret-key")
                         .param("username", "testUser")
                         .param("password", "2222222222"))
                 .andExpect(status().isOk());
@@ -146,6 +145,7 @@ class TraineeControllerTest {
         when(service.findTraineeByUsername(anyString())).thenReturn(mockResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get(API_VERSION + "/trainee/Ivan.Ivanov")
+                        .header("Gateway", "test-secret-key")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
@@ -174,6 +174,7 @@ class TraineeControllerTest {
                 .lastName("Ivanov");
 
         mockMvc.perform(MockMvcRequestBuilders.put(API_VERSION + "/trainee/update")
+                        .header("Gateway", "test-secret-key")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -184,7 +185,8 @@ class TraineeControllerTest {
     void checkIfDeleteTraineeIsCalled() throws Exception {
         when(service.deleteTrainee(eq("Ivan.Ivanov"))).thenReturn(true);
 
-        mockMvc.perform(delete(API_VERSION + "/trainee/delete/Ivan.Ivanov"))
+        mockMvc.perform(delete(API_VERSION + "/trainee/delete/Ivan.Ivanov")
+                        .header("Gateway", "test-secret-key"))
                 .andExpect(status().isOk());
 
         verify(service).deleteTrainee(eq("Ivan.Ivanov"));
@@ -203,7 +205,8 @@ class TraineeControllerTest {
         when(service.getTrainersNotAssignedForTrainee(eq("Ivan.Ivanov"))).thenReturn(mockResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get(API_VERSION + "/trainee/Ivan.Ivanov/trainers/not-assigned")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Gateway", "test-secret-key"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].lastName").value("Burov"))
                 .andExpect(jsonPath("$[0].firstName").value("Oleg"));
@@ -227,6 +230,7 @@ class TraineeControllerTest {
         when(service.updateTrainersForTrainee(eq("Ivan.Ivanov"), any(UpdateTraineesTrainersRequest.class))).thenReturn(mockResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.put(API_VERSION + "/trainee/trainers")
+                        .header("Gateway", "test-secret-key")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -246,7 +250,8 @@ class TraineeControllerTest {
                         .param("username", "testUser")
                         .param("periodFrom", "2024-10-01")
                         .param("periodTo", "2024-10-10")
-                        .param("trainerName", "testTrainer"))
+                        .param("trainerName", "testTrainer")
+                        .header("Gateway", "test-secret-key"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].trainingName").value("Mock Training"));
     }
@@ -257,7 +262,8 @@ class TraineeControllerTest {
 
         mockMvc.perform(patch(API_VERSION + "/trainee/activate")
                         .param("username", "testUser")
-                        .param("isActive", "true"))
+                        .param("isActive", "true")
+                        .header("Gateway", "test-secret-key"))
                 .andExpect(status().isOk());
     }
 }
