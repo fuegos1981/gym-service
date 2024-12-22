@@ -55,6 +55,7 @@ class JwtFilterTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         jwtFilter = new JwtFilter(validGatewaySecret, userDetailsService, jwtProvider);
+        SecurityContextHolder.clearContext();
     }
 
     @Test

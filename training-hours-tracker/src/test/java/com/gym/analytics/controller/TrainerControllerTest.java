@@ -4,6 +4,7 @@ import com.gym.analytics.dto.MonthlySummary;
 import com.gym.analytics.dto.TrainerMonthlySummaryResponse;
 import com.gym.analytics.dto.TrainerWorkloadRequest;
 import com.gym.analytics.dto.YearlySummary;
+import com.gym.analytics.model.Trainer;
 import com.gym.analytics.service.TrainerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class TrainerControllerTest {
 
-    private final static String USERNAME = "trainer123";
+    private final static String USERNAME = "John.Dou";
 
     @Mock
     private TrainerService trainerService;
@@ -34,13 +34,13 @@ class TrainerControllerTest {
     private TrainerController trainerController;
 
     @Test
-    void handleWorkload_ShouldProcessWorkloadSuccessfully() {
+    void checkIfHandleWorkloadIsWorked() {
         TrainerWorkloadRequest workloadRequest = new TrainerWorkloadRequest()
                 .username(USERNAME)
                 .trainingDate(LocalDate.of(2024, 11, 23))
                 .trainingDuration(120.00);
 
-        doNothing().when(trainerService).saveWorkload(workloadRequest);
+        when(trainerService.saveWorkload(workloadRequest)).thenReturn(Trainer.builder().build());
 
         ResponseEntity<String> response = trainerController.handleWorkload(workloadRequest);
 
@@ -50,15 +50,15 @@ class TrainerControllerTest {
     }
 
     @Test
-    void getMonthlySummary_ShouldReturnTrainerMonthlySummaryResponse() {
+    void checkIfGetMonthlySummaryIsWorked() {
         TrainerMonthlySummaryResponse mockResponse = createMockMonthlySummaryResponse();
-        when(trainerService.calculateMonthlySummary(USERNAME)).thenReturn(mockResponse);
+        when(trainerService.getTrainer(USERNAME)).thenReturn(mockResponse);
 
         ResponseEntity<TrainerMonthlySummaryResponse> response = trainerController.getMonthlySummary(USERNAME);
 
         assertEquals(200, response.getStatusCode().value());
         assertEquals(mockResponse, response.getBody());
-        verify(trainerService, times(1)).calculateMonthlySummary(USERNAME);
+        verify(trainerService, times(1)).getTrainer(USERNAME);
     }
 
     private TrainerMonthlySummaryResponse createMockMonthlySummaryResponse() {
