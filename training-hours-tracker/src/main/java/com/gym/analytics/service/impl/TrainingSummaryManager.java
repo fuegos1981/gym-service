@@ -1,8 +1,7 @@
 package com.gym.analytics.service.impl;
 
-import com.gym.analytics.dto.MonthlySummary;
-import com.gym.analytics.dto.TrainerMonthlySummaryResponse;
-import com.gym.analytics.dto.YearlySummary;
+import com.gym.analytics.model.Trainer;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -10,47 +9,65 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class TrainingSummaryManager {
 
-    public void addDurationToYearlySummary(TrainerMonthlySummaryResponse response, LocalDate trainingDate, Double duration) {
+    public void addDurationToYearlySummary(Trainer trainer, LocalDate trainingDate, Double duration) {
         int year = trainingDate.getYear();
         Month month = trainingDate.getMonth();
 
-        YearlySummary yearlySummary = getYearlySummary(response, year);
+        Trainer.Year yearlySummary = getYearlySummary(trainer, year);
 
         updateMonthlySummary(duration, month, yearlySummary);
 
+        if (yearlySummary.getMonthlySummaries().isEmpty()) {
+            trainer.getYears().remove(yearlySummary);
+        }
     }
 
-    private void updateMonthlySummary(Double duration, Month month, YearlySummary yearlySummary) {
-        Optional<MonthlySummary> existingMonthlySummary = yearlySummary.getMonthlySummaries().stream()
-                .filter(e -> Month.valueOf(e.getMonth().toString()) == month)
+    private void updateMonthlySummary(Double duration, Month month, Trainer.Year yearlySummary) {
+
+        List<Trainer.Year.MonthlySummary> monthlySummaries = yearlySummary.getMonthlySummaries();
+        Optional<Trainer.Year.MonthlySummary> existingMonthlySummary = monthlySummaries.stream()
+                .filter(e -> e.getMonth() == month)
                 .findFirst();
 
         if (existingMonthlySummary.isPresent()) {
-            MonthlySummary monthlySummary = existingMonthlySummary.get();
-            monthlySummary.setTotalDuration(monthlySummary.getTotalDuration() + duration);
+            setNewDuration(duration, monthlySummaries, existingMonthlySummary.get());
+            return;
+        }
+
+        Trainer.Year.MonthlySummary monthlySummary = new Trainer.Year.MonthlySummary();
+        monthlySummary.setMonth((month));
+        monthlySummary.setTrainingSummaryDuration(duration);
+        yearlySummary.getMonthlySummaries().add(monthlySummary);
+    }
+
+    private void setNewDuration(Double duration, List<Trainer.Year.MonthlySummary> monthlySummaries, Trainer.Year.MonthlySummary existingMonthlySummary) {
+        double newDuration = existingMonthlySummary.getTrainingSummaryDuration() + duration;
+
+        if (newDuration == 0.0) {
+            monthlySummaries.remove(existingMonthlySummary);
         } else {
-            MonthlySummary monthlySummary = new MonthlySummary();
-            monthlySummary.setMonth(MonthlySummary.MonthEnum.valueOf(month.name()));
-            monthlySummary.setTotalDuration(duration);
-            yearlySummary.getMonthlySummaries().add(monthlySummary);
+            existingMonthlySummary.setTrainingSummaryDuration(newDuration);
         }
     }
 
-    private YearlySummary getYearlySummary(TrainerMonthlySummaryResponse response, int year) {
-        if (response.getYearlySummaries() == null) {
-            response.setYearlySummaries(new ArrayList<>());
+    private Trainer.Year getYearlySummary(Trainer trainer, int year) {
+        if (trainer.getYears() == null) {
+            trainer.setYears(new ArrayList<>());
         }
 
-        return response.getYearlySummaries().stream()
+        return trainer.getYears().stream()
                 .filter(e -> e.getYear() == year)
                 .findFirst()
-                .orElseGet(() -> {
-                    YearlySummary newYearlySummary = new YearlySummary();
-                    newYearlySummary.setYear(year);
-                    response.getYearlySummaries().add(newYearlySummary);
-                    return newYearlySummary;
-                });
+                .orElseGet(() -> buildNewYearSummary(trainer, year));
+    }
+
+    private Trainer.Year buildNewYearSummary(Trainer trainer, int year) {
+        Trainer.Year newYear = new Trainer.Year();
+        newYear.setYear(year);
+        trainer.getYears().add(newYear);
+        return newYear;
     }
 }

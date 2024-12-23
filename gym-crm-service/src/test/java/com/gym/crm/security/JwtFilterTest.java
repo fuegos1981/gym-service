@@ -55,6 +55,7 @@ class JwtFilterTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         jwtFilter = new JwtFilter(validGatewaySecret, userDetailsService, jwtProvider);
+        SecurityContextHolder.clearContext();
     }
 
     @Test
@@ -85,7 +86,7 @@ class JwtFilterTest {
         jwtFilter.doFilterInternal(request, response, filterChain);
 
         verify(response, times(1)).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        assertTrue(stringWriter.toString().contains("Without Gateway!"));
+        assertTrue(stringWriter.toString().contains("Use Gateway entrance"));
     }
 
     @Test
@@ -134,7 +135,7 @@ class JwtFilterTest {
         printWriter.flush();
         String responseBody = stringWriter.toString();
 
-        assertTrue(responseBody.contains("Without Gateway!"));
+        assertTrue(responseBody.contains("Use Gateway entrance"));
         assertTrue(responseBody.contains(CoreError.ACCESS_ERROR.getCode()));
     }
 }

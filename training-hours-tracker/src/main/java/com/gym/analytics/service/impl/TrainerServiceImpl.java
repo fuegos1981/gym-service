@@ -2,47 +2,43 @@ package com.gym.analytics.service.impl;
 
 import com.gym.analytics.dto.TrainerMonthlySummaryResponse;
 import com.gym.analytics.dto.TrainerWorkloadRequest;
-import com.gym.analytics.mapper.TrainerWorkloadMapper;
-import com.gym.analytics.model.TrainerWorkload;
-import com.gym.analytics.repository.TrainerWorkloadRepository;
+import com.gym.analytics.exception.EntityNotFoundException;
+import com.gym.analytics.mapper.TrainerMapper;
+import com.gym.analytics.model.Trainer;
+import com.gym.analytics.repository.TrainerReportRepository;
 import com.gym.analytics.service.TrainerService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class TrainerServiceImpl implements TrainerService {
 
-    private final TrainerWorkloadRepository repository;
-    private final TrainerWorkloadMapper mapper;
+    private final static String ADD_ACTION = "ADD";
 
-    public void saveWorkload(TrainerWorkloadRequest workload) {
-        repository.save(mapper.toGetTrainerWorkload(workload));
+    private final TrainerReportRepository repository;
+    private final TrainerMapper mapper;
+    private final TrainingSummaryManager manager;
+
+    public Trainer saveWorkload(TrainerWorkloadRequest request) {
+        String username = request.getUsername();
+        Double trainingDuration = (request.getActionType().toString().equalsIgnoreCase(ADD_ACTION) ? 1.00 : -1.00) * request.getTrainingDuration();
+
+        Trainer trainer = repository.findByUsername(username).orElse(Trainer.builder().build());
+
+        trainer.setUsername(username);
+        trainer.setFirstName(request.getFirstName());
+        trainer.setLastName(request.getLastName());
+        trainer.setStatus(request.getIsActive());
+        manager.addDurationToYearlySummary(trainer, request.getTrainingDate(), trainingDuration);
+
+        return repository.save(trainer);
     }
 
-    public TrainerMonthlySummaryResponse calculateMonthlySummary(String username) {
-        List<TrainerWorkload> workloads = repository.findByUsernameOrderByTrainingDateAsc(username);
-        TrainingSummaryManager manager = new TrainingSummaryManager();
-        if (workloads.size() == 0) {
-            return null;
-        }
+    public TrainerMonthlySummaryResponse getTrainer(String username) {
+        Trainer trainer = repository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Trainer not found in database"));
 
-        TrainerWorkload lastWorkload = workloads.get(workloads.size() - 1);
-        TrainerMonthlySummaryResponse response = new TrainerMonthlySummaryResponse(
-                lastWorkload.getUsername(),
-                lastWorkload.getFirstName(),
-                lastWorkload.getLastName(),
-                lastWorkload.getIsActive() ? TrainerMonthlySummaryResponse.StatusEnum.ACTIVE : TrainerMonthlySummaryResponse.StatusEnum.NOT_ACTIVE,
-        null);
-
-       workloads.forEach(w -> manager.addDurationToYearlySummary(response, w.getTrainingDate(), w.getTrainingDuration()));
-
-        return response;
+        return mapper.toGetTrainerMonthlySummaryResponse(trainer);
     }
-
-
-
-
 }

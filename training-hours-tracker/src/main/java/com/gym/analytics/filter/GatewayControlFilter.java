@@ -40,7 +40,7 @@ public class GatewayControlFilter extends OncePerRequestFilter {
         String gatewayKey = request.getHeader("Gateway");
 
         if (gatewayKey == null || !gatewayKey.equals(gatewaySecretKey)) {
-            throw new AccessException("Without Gateway!");
+            throw new AccessException("Use Gateway entrance");
         }
     }
 
