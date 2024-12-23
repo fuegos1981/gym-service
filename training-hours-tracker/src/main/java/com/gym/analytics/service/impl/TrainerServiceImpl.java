@@ -16,9 +16,9 @@ public class TrainerServiceImpl implements TrainerService {
 
     private final static String ADD_ACTION = "ADD";
 
-    private TrainerReportRepository repository;
-    private TrainerMapper mapper;
-    private TrainingSummaryManager manager;
+    private final TrainerReportRepository repository;
+    private final TrainerMapper mapper;
+    private final TrainingSummaryManager manager;
 
     public Trainer saveWorkload(TrainerWorkloadRequest request) {
         String username = request.getUsername();

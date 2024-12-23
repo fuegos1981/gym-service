@@ -1,5 +1,6 @@
 package com.gym.analytics.filter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gym.analytics.dto.ErrorResponse;
 import com.gym.analytics.exception.CoreError;
@@ -25,15 +26,14 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class GatewayControlFilterTest {
 
+    private final String VALID_GATEWAY_KEY = "validKey";
+
     private GatewayControlFilter filter;
-
-    @Mock
-    private FilterChain mockFilterChain;
-
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
 
-    private final String validGatewayKey = "validKey";
+    @Mock
+    private FilterChain mockFilterChain;
 
     @BeforeEach
     void setUp() throws NoSuchFieldException, IllegalAccessException {
@@ -43,7 +43,7 @@ class GatewayControlFilterTest {
 
         Field gatewaySecretKeyField = GatewayControlFilter.class.getDeclaredField("gatewaySecretKey");
         gatewaySecretKeyField.setAccessible(true);
-        gatewaySecretKeyField.set(filter, validGatewayKey);
+        gatewaySecretKeyField.set(filter, VALID_GATEWAY_KEY);
 
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
@@ -51,7 +51,7 @@ class GatewayControlFilterTest {
 
     @Test
     void checkIfFilterWithValidGatewayHeader() throws ServletException, IOException {
-        request.addHeader("Gateway", validGatewayKey);
+        request.addHeader("Gateway", VALID_GATEWAY_KEY);
 
         filter.doFilterInternal(request, response, mockFilterChain);
 
@@ -69,12 +69,8 @@ class GatewayControlFilterTest {
 
         assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String expectedResponse = objectMapper.writeValueAsString(
-                new ErrorResponse()
-                        .code(CoreError.ACCESS_ERROR.getCode())
-                        .message("Without Gateway!")
-        );
+        String expectedResponse = constructErrorResponse();
+
         assertEquals(expectedResponse, response.getContentAsString());
     }
 
@@ -86,13 +82,17 @@ class GatewayControlFilterTest {
 
         assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String expectedResponse = objectMapper.writeValueAsString(
-                new ErrorResponse()
-                        .code(CoreError.ACCESS_ERROR.getCode())
-                        .message("Without Gateway!")
-        );
+        String expectedResponse = constructErrorResponse();
+
         assertEquals(expectedResponse, response.getContentAsString());
     }
 
+    private String constructErrorResponse() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(
+                new ErrorResponse()
+                        .code(CoreError.ACCESS_ERROR.getCode())
+                        .message("Use Gateway entrance")
+        );
+    }
 }

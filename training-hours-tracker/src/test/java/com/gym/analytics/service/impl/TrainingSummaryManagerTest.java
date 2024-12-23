@@ -18,8 +18,9 @@ class TrainingSummaryManagerTest {
     private static final double FIRST_DURATION = 120;
     private static final double SECOND_DURATION = 90;
 
-    private Trainer trainer;
     private final TrainingSummaryManager manager = new TrainingSummaryManager();
+
+    private Trainer trainer;
 
     @BeforeEach
     void setUp() {

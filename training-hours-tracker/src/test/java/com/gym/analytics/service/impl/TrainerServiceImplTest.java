@@ -28,9 +28,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class TrainerServiceImplTest {
 
-    @InjectMocks
-    private TrainerServiceImpl trainerService;
-
     @Mock
     private TrainerReportRepository repository;
 
@@ -39,6 +36,9 @@ class TrainerServiceImplTest {
 
     @Mock
     private TrainingSummaryManager manager;
+
+    @InjectMocks
+    private TrainerServiceImpl trainerService;
 
     @Test
     void checkIfSaveWorkloadWithCorrectData() {

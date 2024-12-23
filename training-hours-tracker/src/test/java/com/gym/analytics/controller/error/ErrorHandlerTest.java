@@ -4,7 +4,6 @@ import com.gym.analytics.dto.ErrorResponse;
 import com.gym.analytics.exception.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSourceResolvable;
@@ -28,17 +27,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ErrorHandlerTest {
 
-    @InjectMocks
     private final ErrorHandler controllerAdvice = new ErrorHandler();
 
     @Test
     void TestHandleHandlerMethodValidationException() {
         HandlerMethodValidationException exception = mock(HandlerMethodValidationException.class);
-        MessageSourceResolvable error1 = mock(MessageSourceResolvable.class);
+        MessageSourceResolvable error = mock(MessageSourceResolvable.class);
 
-        when(error1.getDefaultMessage()).thenReturn("Username must not be blank");
+        when(error.getDefaultMessage()).thenReturn("Username must not be blank");
 
-        List<MessageSourceResolvable> errors = List.of(error1);
+        List<MessageSourceResolvable> errors = List.of(error);
         Mockito.<List<? extends MessageSourceResolvable>>when(exception.getAllErrors()).thenReturn(errors);
 
         ResponseEntity<Object> response = controllerAdvice.handleHandlerMethodValidationException(exception);

@@ -32,7 +32,6 @@ public class Trainer {
     @Field("years")
     private List<Year> years;
 
-
     @Data
     public static class Year {
         @Field("year")

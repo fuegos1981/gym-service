@@ -21,11 +21,11 @@ class MongoConfigTest {
     @Mock
     private MongoTemplate mongoTemplate;
 
-    @InjectMocks
-    private MongoConfig mongoConfig;
-
     @Mock
     private IndexOperations indexOperations;
+
+    @InjectMocks
+    private MongoConfig mongoConfig;
 
     @Test
     void createIndexes_ShouldCreateCompoundIndex() {

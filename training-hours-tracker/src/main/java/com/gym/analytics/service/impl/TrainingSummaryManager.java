@@ -34,12 +34,13 @@ public class TrainingSummaryManager {
 
         if (existingMonthlySummary.isPresent()) {
             setNewDuration(duration, monthlySummaries, existingMonthlySummary.get());
-        } else {
-            Trainer.Year.MonthlySummary monthlySummary = new Trainer.Year.MonthlySummary();
-            monthlySummary.setMonth((month));
-            monthlySummary.setTrainingSummaryDuration(duration);
-            yearlySummary.getMonthlySummaries().add(monthlySummary);
+            return;
         }
+
+        Trainer.Year.MonthlySummary monthlySummary = new Trainer.Year.MonthlySummary();
+        monthlySummary.setMonth((month));
+        monthlySummary.setTrainingSummaryDuration(duration);
+        yearlySummary.getMonthlySummaries().add(monthlySummary);
     }
 
     private void setNewDuration(Double duration, List<Trainer.Year.MonthlySummary> monthlySummaries, Trainer.Year.MonthlySummary existingMonthlySummary) {
@@ -60,11 +61,13 @@ public class TrainingSummaryManager {
         return trainer.getYears().stream()
                 .filter(e -> e.getYear() == year)
                 .findFirst()
-                .orElseGet(() -> {
-                    Trainer.Year newYear = new Trainer.Year();
-                    newYear.setYear(year);
-                    trainer.getYears().add(newYear);
-                    return newYear;
-                });
+                .orElseGet(() -> buildNewYearSummary(trainer, year));
+    }
+
+    private Trainer.Year buildNewYearSummary(Trainer trainer, int year) {
+        Trainer.Year newYear = new Trainer.Year();
+        newYear.setYear(year);
+        trainer.getYears().add(newYear);
+        return newYear;
     }
 }
