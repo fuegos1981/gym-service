@@ -1,13 +1,15 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   liquibase:
     enabled: false
   cloud:
     discovery:
       enabled: false
   datasource:
-    url: jdbc:mysql://localhost:3306/gym_test_db
-    username: root
-    password: root
+    url: ${TEST_DB_URL}
+    username: ${TEST_DB_USERNAME}
+    password: ${TEST_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:

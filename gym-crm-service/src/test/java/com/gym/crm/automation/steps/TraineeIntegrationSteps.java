@@ -10,10 +10,12 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TraineeIntegrationSteps extends TraineeTest {
+public class TraineeIntegrationSteps extends GlobalSender {
+
+    private static final String API_VERSION = "/api/v1/gym-crm-service";
 
     private ResponseEntity<?> response;
     private String firstName;
@@ -33,7 +35,7 @@ public class TraineeIntegrationSteps extends TraineeTest {
                 .address("Merefa")
                 .dateOfBirth(LocalDate.of(2000, 11, 1));
 
-        response = post("/api/v1/gym-crm-service/trainee/register", traineeProfile, Object.class);
+        response = post(API_VERSION + "/trainee/register", traineeProfile, Object.class);
     }
 
     @Then("the response status should be 201")
@@ -54,7 +56,7 @@ public class TraineeIntegrationSteps extends TraineeTest {
         request.oldPassword("password12");
         request.newPassword("newPass123");
 
-        response = put("/api/v1/gym-crm-service/trainee/change-login", request, Object.class);
+        response = put(API_VERSION + "/trainee/change-login", request, Object.class);
     }
 
     @Then("the response status should be 200")
@@ -64,12 +66,12 @@ public class TraineeIntegrationSteps extends TraineeTest {
 
     @Given("an existing trainee with username {string} for getting profile")
     public void getTraineeWithUsername(String username) {
-        response = get("/api/v1/gym-crm-service/trainee/" + username, Object.class);
+        response = get(API_VERSION + "/trainee/" + username, Object.class);
     }
 
     @Then("the response should contain the trainee profile details")
     public void theResponseShouldContainTheTraineeProfileDetails() {
         String responseBody = response.getBody().toString();
-        assertTrue(responseBody.contains("Maria")&&responseBody.contains("Ivanova"));
+        assertTrue(responseBody.contains("Maria") && responseBody.contains("Ivanova"));
     }
 }

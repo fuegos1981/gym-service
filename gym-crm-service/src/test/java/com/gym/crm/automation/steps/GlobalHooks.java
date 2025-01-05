@@ -25,7 +25,6 @@ public class GlobalHooks {
 
     @Before("@specialHook")
     public void setupDatabase() {
-
         if (userRepository.findByUsername("Test.User").isEmpty()) {
             User user = User.builder()
                     .firstName("Test")
@@ -36,6 +35,7 @@ public class GlobalHooks {
 
             userRepository.save(user);
         }
+
         if (userRepository.findByUsername("Maria.Ivanova").isEmpty()) {
             User user = User.builder()
                     .firstName("Maria")

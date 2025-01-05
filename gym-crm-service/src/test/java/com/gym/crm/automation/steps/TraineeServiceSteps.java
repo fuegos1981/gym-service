@@ -70,7 +70,7 @@ public class TraineeServiceSteps {
 
     private boolean matchResult;
     private boolean deleteResult;
-    
+
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
