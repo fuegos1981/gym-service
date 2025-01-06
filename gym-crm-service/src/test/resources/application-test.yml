@@ -1,0 +1,26 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  liquibase:
+    enabled: false
+  cloud:
+    discovery:
+      enabled: false
+  datasource:
+    url: ${TEST_DB_URL}
+    username: ${TEST_DB_USERNAME}
+    password: ${TEST_DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        jpa:
+          show_sql: true
+        hbm2ddl:
+          auto: create
+  instance:
+    prefer-ip-address: true
+gateway:
+  secret: my-secure-gateway-secret-key-which-is-shared

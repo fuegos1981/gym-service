@@ -1,15 +1,14 @@
 package com.gym.crm.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gym.analytics.dto.ErrorResponse;
-import com.gym.analytics.exception.AccessException;
-import com.gym.analytics.exception.CoreError;
+import com.gym.crm.dto.ErrorResponse;
+import com.gym.crm.exception.AccessException;
+import com.gym.crm.exception.CoreError;
 import com.gym.crm.service.impl.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
