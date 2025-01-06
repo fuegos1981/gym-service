@@ -18,7 +18,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,20 +50,16 @@ public class TrainerServiceSteps {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Given("the trainer profile is null")
-    public void theTrainerProfileIsNull() {
-    }
-
-    @When("I attempt to create a trainer")
+    @When("I attempt to create a trainer with trainer profile null")
     public void iAttemptToCreateATrainer() {
         exception = assertThrows(ServiceException.class, () -> trainerService.create(null));
     }
 
     @Then("a ServiceException is thrown with message {string}")
     public void aServiceExceptionIsThrownWithMessage(String expectedMessage) {
-        assert exception != null;
-        assert exception instanceof ServiceException;
-        assert exception.getMessage().equals(expectedMessage);
+        assertNotNull(exception);
+        assertTrue(exception instanceof ServiceException);
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Given("the trainer update request has username {string}")
@@ -77,26 +76,23 @@ public class TrainerServiceSteps {
 
     @Then("an EntityNotFoundException is thrown with message {string}")
     public void anEntityNotFoundExceptionIsThrownWithMessage(String expectedMessage) {
-        assert exception != null;
-        assert exception instanceof EntityNotFoundException;
-        assert exception.getMessage().equals(expectedMessage);
+        assertNotNull(exception);
+        assertTrue(exception instanceof EntityNotFoundException);
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
-    @Given("the username is null")
-    public void theUsernameIsNull() {
-    }
-
-    @When("I attempt to find a trainer by username")
+    @When("I attempt to find a trainer by null username")
     public void iAttemptToFindATrainerByUsername() {
         exception = assertThrows(ServiceException.class, () -> trainerService.findByUsername(null));
     }
 
-    @Given("the username is null and password is null")
-    public void theUsernameIsNullAndPasswordIsNull() {
+    @Given("the username is {string} and password is null")
+    public void theUsernameIsNullAndPasswordIsNull(String username) {
+        this.username = username;
     }
 
     @When("I attempt to match username and password")
     public void iAttemptToMatchUsernameAndPassword() {
-        exception = assertThrows(ServiceException.class, () -> trainerService.matchUsernameAndPassword(null, null));
+        exception = assertThrows(ServiceException.class, () -> trainerService.matchUsernameAndPassword(username, null));
     }
 }

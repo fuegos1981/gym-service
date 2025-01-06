@@ -53,7 +53,8 @@ public class TrainingServiceSteps {
     private TrainingServiceImpl trainingService;
 
     private Exception exception;
-    private AddTrainingsRequest request;
+    private String traineeUsername;
+    private String trainerUsername;
 
     @Before
     public void setUp() {
@@ -62,6 +63,7 @@ public class TrainingServiceSteps {
 
     @Given("a trainee with username {string} exists")
     public void aTraineeWithUsernameExists(String username) {
+        traineeUsername = username;
         Trainee trainee = buildTrainee(username);
         when(traineeRepository.findByUserUsername(username)).thenReturn(Optional.of(trainee));
     }
@@ -73,6 +75,7 @@ public class TrainingServiceSteps {
 
     @Given("a trainer with username {string} exists")
     public void aTrainerWithUsernameExists(String username) {
+        trainerUsername = username;
         Trainer trainer = buildTrainer(username);
         when(trainerRepository.findByUserUsername(username)).thenReturn(Optional.of(trainer));
     }
@@ -84,17 +87,14 @@ public class TrainingServiceSteps {
 
     @When("I create a training with name {string}, date {string}, and duration {string}")
     public void iCreateATrainingWithNameDateAndDuration(String name, String date, String duration) {
-        request = new AddTrainingsRequest()
-                .traineeUsername("john.doe")
-                .trainerUsername("jane.doe")
+        AddTrainingsRequest request = new AddTrainingsRequest()
+                .traineeUsername(traineeUsername)
+                .trainerUsername(trainerUsername)
                 .trainingName(name)
                 .trainingDate(LocalDate.parse(date))
                 .trainingDuration(Double.parseDouble(duration.replace(" minutes", "")));
 
-        when(trainingRepository.save(any(Training.class))).thenAnswer(invocation -> {
-            Training training = invocation.getArgument(0);
-            return training;
-        });
+        when(trainingRepository.save(any(Training.class))).thenAnswer(invocation -> invocation.<Training>getArgument(0));
 
         try {
             trainingService.create(request);

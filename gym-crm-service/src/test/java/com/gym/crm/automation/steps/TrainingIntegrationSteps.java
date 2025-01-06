@@ -13,6 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TrainingIntegrationSteps extends GlobalSender {
 
     private static final String API_VERSION = "/api/v1/gym-crm-service";
+    private static final String TRAINEE_USERNAME = "Ivan.Ivanov";
+    private static final String TRAINER_USERNAME = "Oleg.Burov";
+    private static final String TRAINING_NAME = "Box in our life";
 
     private ResponseEntity<?> response;
 
@@ -33,10 +36,10 @@ public class TrainingIntegrationSteps extends GlobalSender {
 
     private AddTrainingsRequest buildTrainingsRequest() {
         return new AddTrainingsRequest()
-                .traineeUsername("Ivan.Ivanov")
+                .traineeUsername(TRAINEE_USERNAME)
                 .trainingDate(LocalDate.of(2024, 10, 10))
-                .trainerUsername("Oleg.Burov")
-                .trainingName("Box in our life")
+                .trainerUsername(TRAINER_USERNAME)
+                .trainingName(TRAINING_NAME)
                 .trainingDuration(2.0);
     }
 }
