@@ -1,0 +1,20 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  liquibase:
+    enabled: false
+  cloud:
+    discovery:
+      enabled: false
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/gym-test
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: create
+  instance:
+    prefer-ip-address: true
+gateway:
+  secret: my-secure-gateway-secret-key-which-is-shared
