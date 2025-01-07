@@ -43,12 +43,14 @@ public class GlobalSender {
 
     protected <T> ResponseEntity<T> post(String url, Object body, Class<T> responseType) {
         HttpEntity<Object> entity = new HttpEntity<>(body, createHeadersWithAuth(true));
+
         return restTemplate.postForEntity(url, entity, responseType);
     }
 
     protected <T> ResponseEntity<T> get(String url, Class<T> responseType, boolean hasGateway) {
         HttpHeaders headers = createHeadersWithAuth(hasGateway);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
+
         return restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
     }
 }

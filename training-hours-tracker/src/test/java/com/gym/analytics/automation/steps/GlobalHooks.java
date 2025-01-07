@@ -33,18 +33,20 @@ public class GlobalHooks {
 
     @Before("@specialHook")
     public void setupDatabase() {
-        if (repository.findByUsername(USERNAME).isEmpty()) {
-            Trainer trainer = Trainer.builder()
-                    .firstName(FIRST_NAME)
-                    .lastName(LAST_NAME)
-                    .username(USERNAME)
-                    .status(true)
-                    .build();
-
-            manager.addDurationToYearlySummary(trainer, LocalDate.of(2024, 12, 21), 2.0);
-            manager.addDurationToYearlySummary(trainer, LocalDate.of(2024, 11, 21), 3.0);
-
-            repository.save(trainer);
+        if (repository.findByUsername(USERNAME).isPresent()) {
+            return;
         }
+
+        Trainer trainer = Trainer.builder()
+                .firstName(FIRST_NAME)
+                .lastName(LAST_NAME)
+                .username(USERNAME)
+                .status(true)
+                .build();
+
+        manager.addDurationToYearlySummary(trainer, LocalDate.of(2024, 12, 21), 2.0);
+        manager.addDurationToYearlySummary(trainer, LocalDate.of(2024, 11, 21), 3.0);
+
+        repository.save(trainer);
     }
 }
