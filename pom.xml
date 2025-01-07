@@ -27,6 +27,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<jsonwebtoken.version>0.12.6</jsonwebtoken.version>
+		<cucumber.version>7.20.1</cucumber.version>
 	</properties>
 
 	<dependencyManagement>
