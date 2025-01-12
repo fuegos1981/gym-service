@@ -8,6 +8,7 @@ import com.gym.crm.model.Training;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,18 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@AllArgsConstructor
 public class AnalyticsSender {
 
     private final TrainingMapper mapper;
     private final JmsTemplate jmsTemplate;
+
+    public AnalyticsSender(TrainingMapper mapper, JmsTemplate jmsTemplate) {
+        this.mapper = mapper;
+        this.jmsTemplate = jmsTemplate;
+    }
+
+    @Value("${jsm.queue.destination}")
+    private String destination;
 
     public String processWorkload(Training training, String action) {
         String transactionId = MDC.get(GlobalConstants.TRANSACTION_ID);
@@ -28,7 +36,7 @@ public class AnalyticsSender {
         try {
             TrainerWorkloadRequest request = mapper.toTrainerWorkloadRequest(training, action);
 
-            jmsTemplate.convertAndSend("training-hours-queue", request, message -> {
+            jmsTemplate.convertAndSend(destination, request, message -> {
                 message.setStringProperty("transactionId", transactionId);
                 return message;
             });

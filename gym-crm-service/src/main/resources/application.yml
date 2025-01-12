@@ -77,3 +77,6 @@ jwt:
   secret: my-secure-secret-key-which-is-shared
 gateway:
   secret: my-secure-gateway-secret-key-which-is-shared
+jsm:
+  queue:
+    destination: training-hours-queue

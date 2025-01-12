@@ -8,8 +8,10 @@ import com.gym.crm.model.Trainer;
 import com.gym.crm.model.Training;
 import com.gym.crm.model.TrainingType;
 import com.gym.crm.model.User;
+import com.gym.crm.security.JwtFilter;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -17,10 +19,13 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessagePostProcessor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,6 +41,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AnalyticsSenderTest {
 
+    private static final String DESTINATION = "training-hours-queue-test";
     private static final User TRAINEE_USER = buildUser("Bogdan", "Petrov", "3333333333");
     private static final User TRAINER_USER = buildUser("Oleg", "Bodov", "4444444444");
     private static final Trainee TRAINEE = buildTrainee();
@@ -55,6 +61,11 @@ class AnalyticsSenderTest {
     @Captor
     private ArgumentCaptor<MessagePostProcessor> messagePostProcessorCaptor;
 
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(analyticsSender, "destination", DESTINATION);
+    }
+
     @Test
     void checkIfProcessWorkloadForSingleTrainingIsCorrect() throws JMSException {
         String action = "ADD";
@@ -68,7 +79,7 @@ class AnalyticsSenderTest {
         String result = analyticsSender.processWorkload(TRAINING, action);
 
         assertEquals("Message sent to queue successfully.", result);
-        verify(jmsTemplate).convertAndSend(eq("training-hours-queue"), eq(TRAINER_WORKLOAD), messagePostProcessorCaptor.capture());
+        verify(jmsTemplate).convertAndSend(eq(DESTINATION), eq(TRAINER_WORKLOAD), messagePostProcessorCaptor.capture());
 
         MessagePostProcessor postProcessor = messagePostProcessorCaptor.getValue();
         Message mockMessage = mock(Message.class);
@@ -90,7 +101,7 @@ class AnalyticsSenderTest {
 
         assertEquals("Message sent to queue successfully.", result);
         verify(mapper).toTrainerWorkloadRequest(TRAINING, action);
-        verify(jmsTemplate).convertAndSend(eq("training-hours-queue"), eq(TRAINER_WORKLOAD), messagePostProcessorCaptor.capture());
+        verify(jmsTemplate).convertAndSend(eq(DESTINATION), eq(TRAINER_WORKLOAD), messagePostProcessorCaptor.capture());
     }
 
     private static TrainerWorkloadRequest buildTrainerWorkloadRequest() {

@@ -1,9 +1,11 @@
 server:
   port: 8099
 spring:
+  application:
+    name: gym-crm-service
   config:
     activate:
-      on-profile: test
+      on-profile: autotest
     import: optional:file:.env[.properties]
   liquibase:
     enabled: false
@@ -37,3 +39,18 @@ spring:
     prefer-ip-address: true
 gateway:
   secret: my-secure-gateway-secret-key-which-is-shared
+jwt:
+  secret: my-secure-secret-key-which-is-shared
+app:
+  root:
+    url: http://localhost:8080
+api:
+  version: /api/v1/gym-crm-service
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /api/v1/gym-crm-service/swagger-ui.html
+jsm:
+  queue:
+    destination: training-hours-queue-test

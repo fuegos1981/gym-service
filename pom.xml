@@ -8,7 +8,8 @@
 		<module>gateway</module>
 		<module>training-hours-tracker</module>
 		<module>gym-crm-service</module>
-	</modules>
+        <module>gym-automation-service</module>
+    </modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
