@@ -17,3 +17,5 @@ mvn -pl gym-crm-service test -Dtest=CucumberRunnerTest - command for running all
 in microservice gym-crm-service
 
 mvn -pl gym-crm-service test - command for running all tests in microservice gym-crm-service
+
+mvn verify -pl !discovery-server -Dgroups="Endpoint_Create_correct_training_test" - command for running  main integration test

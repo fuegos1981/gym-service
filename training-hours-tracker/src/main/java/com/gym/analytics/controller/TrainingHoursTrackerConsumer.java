@@ -8,6 +8,7 @@ import jakarta.jms.Message;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ public class TrainingHoursTrackerConsumer {
 
     private final TrainerService service;
 
-    @JmsListener(destination = "training-hours-queue")
+    @JmsListener(destination = "${jsm.queue.destination}")
     public void receiveWorkload(TrainerWorkloadRequest workload, @Header("transactionId") String transactionId) {
         MDC.put(GlobalConstants.TRANSACTION_ID, transactionId);
         service.saveWorkload(workload);

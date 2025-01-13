@@ -1,0 +1,38 @@
+server:
+  port: 8098
+spring:
+  application:
+    name: training-hours-tracker
+  config:
+    activate:
+      on-profile: hoursautotest
+    import: optional:file:.env[.properties]
+  liquibase:
+    enabled: false
+  jpa:
+    enabled: false
+  cloud:
+    discovery:
+      enabled: false
+    gateway:
+      enabled: false
+  activemq:
+    broker-url: ${TEST_BROKER_URL}
+    user: ${TEST_USER}
+    password: ${TEST_PASSWORD}
+    packages:
+      trust-all: true
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/gym-test
+  instance:
+    prefer-ip-address: true
+gateway:
+  secret: my-secure-gateway-secret-key-which-is-shared
+api:
+  version: /api/v1/training-hours-tracker
+jsm:
+  queue:
+    destination: training-hours-queue-test
+jwt:
+  secret: my-secure-secret-key-which-is-shared

@@ -1,3 +1,5 @@
+server:
+  port: 8098
 spring:
   config:
     import: optional:file:.env[.properties]
@@ -6,6 +8,14 @@ spring:
   cloud:
     discovery:
       enabled: false
+    gateway:
+      enabled: false
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+    packages:
+      trust-all: true
   data:
     mongodb:
       uri: mongodb://localhost:27017/gym-test
