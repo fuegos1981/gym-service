@@ -3,15 +3,17 @@ server:
 spring:
   application:
     name: gym-automation-service
+  config:
+    import: optional:file:.env[.properties]
   security:
     enabled: false
   data:
     mongodb:
-      uri: mongodb://localhost:27017/gym-test
+      uri: ${TEST_MONGO_URL}
   datasource:
-    url: jdbc:mysql://localhost:3306/gym_test_db
-    username: root
-    password: root
+    url: ${TEST_DB_URL}
+    username: ${TEST_DB_USERNAME}
+    password: ${TEST_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     enabled: false

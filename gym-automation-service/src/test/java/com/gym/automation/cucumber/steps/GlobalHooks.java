@@ -17,6 +17,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+import static com.gym.automation.repository.MySqlRepository.GET_BY_TRAINING_TYPE_NAME_QUERY;
+import static com.gym.automation.repository.MySqlRepository.INSERT_TRAINEE_QUERY;
+import static com.gym.automation.repository.MySqlRepository.INSERT_TRAINER_QUERY;
+import static com.gym.automation.repository.MySqlRepository.INSERT_TRAINING_TYPE_QUERY;
+import static com.gym.automation.repository.MySqlRepository.INSERT_USER_QUERY;
+
 @ExtendWith(SpringExtension.class)
 @CucumberContextConfiguration
 @ContextConfiguration(classes = AutoApplication.class)
@@ -75,23 +81,23 @@ public class GlobalHooks {
     }
 
     private void addAuthorizedUser() throws SQLException {
-        repository.save(MySqlRepository.INSERT_USER, AUTH_FIRSTNAME, AUTH_LASTNAME, AUTH_USERNAME, AUTH_PASSWORD, true);
+        repository.save(INSERT_USER_QUERY, AUTH_FIRSTNAME, AUTH_LASTNAME, AUTH_USERNAME, AUTH_PASSWORD, true);
     }
 
     private void addTrainee() throws SQLException {
-        Long idUser = repository.save(MySqlRepository.INSERT_USER, TRAINEE_FIRSTNAME, TRAINEE_LASTNAME, TRAINEE_USERNAME, TRAINEE_PASSWORD, true);
+        Long idUser = repository.save(INSERT_USER_QUERY, TRAINEE_FIRSTNAME, TRAINEE_LASTNAME, TRAINEE_USERNAME, TRAINEE_PASSWORD, true);
 
-        repository.save(MySqlRepository.INSERT_TRAINEE, idUser, LocalDate.of(1980, 11, 10), TRAINEE_ADDRESS);
+        repository.save(INSERT_TRAINEE_QUERY, idUser, LocalDate.of(1980, 11, 10), TRAINEE_ADDRESS);
     }
 
     private void addTrainer() throws SQLException {
-        Long idTrainingType = repository.read(TRAINING_TYPE);
+        Long idTrainingType = repository.readIdByName(GET_BY_TRAINING_TYPE_NAME_QUERY, TRAINING_TYPE);
         if (idTrainingType.equals(-1L)) {
-            idTrainingType = repository.save(MySqlRepository.INSERT_TRAINING_TYPE, TRAINING_TYPE);
+            idTrainingType = repository.save(INSERT_TRAINING_TYPE_QUERY, TRAINING_TYPE);
         }
 
-        Long idUser = repository.save(MySqlRepository.INSERT_USER, TRAINER_FIRSTNAME, TRAINER_LASTNAME, TRAINER_USERNAME, TRAINER_PASSWORD, true);
+        Long idUser = repository.save(INSERT_USER_QUERY, TRAINER_FIRSTNAME, TRAINER_LASTNAME, TRAINER_USERNAME, TRAINER_PASSWORD, true);
 
-        repository.save(MySqlRepository.INSERT_TRAINER, idUser, idTrainingType);
+        repository.save(INSERT_TRAINER_QUERY, idUser, idTrainingType);
     }
 }

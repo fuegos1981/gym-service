@@ -71,8 +71,7 @@ public class TrainingIntegrationTest {
 
     @Then("in microservice training-hours-tracker has information about trainer with username {string}")
     public void checkTrainerUsername(String username) throws IOException, InterruptedException {
-        String fullUrl = "http://localhost:" + hoursTrackerServicePort + API_VERSION_TRAINER_HOURS + "/trainers/" + username + "/summary";
-
+        String fullUrl = String.format("http://localhost:%s%s/trainers/%s/summary", hoursTrackerServicePort, API_VERSION_TRAINER_HOURS, username);
         HttpRequest request = getHttpRequestBuilder(fullUrl).GET().build();
         HttpResponse<String> responseHoursTracker = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 

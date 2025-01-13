@@ -16,9 +16,9 @@ spring:
     gateway:
       enabled: false
   activemq:
-    broker-url: tcp://localhost:61616
-    user: admin
-    password: admin
+    broker-url: ${TEST_BROKER_URL}
+    user: ${TEST_USER}
+    password: ${TEST_PASSWORD}
     packages:
       trust-all: true
   datasource:
