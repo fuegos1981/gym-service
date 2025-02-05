@@ -27,7 +27,7 @@ spring:
           predicates:
             - Path=/actuator/**
   r2dbc:
-    url: r2dbc:mysql://localhost:3306/gym
+    url: ${R2DBC_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     flyway:

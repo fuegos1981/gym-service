@@ -19,3 +19,23 @@ in microservice gym-crm-service
 mvn -pl gym-crm-service test - command for running all tests in microservice gym-crm-service
 
 mvn verify -pl !discovery-server -Dgroups="Endpoint_Create_correct_training_test" - command for running  main integration test
+
+Maven build for docker
+mvn clean package -Pdocker-build
+mvn clean package -pl gym-crm-service -Pdocker-build
+
+Working with docker
+docker-compose up -d
+docker-compose down
+docker-compose logs
+docker logs mongo-db
+docker logs mysql-db
+docker logs mysql-db
+docker logs activemq
+docker logs discovery-server
+docker logs gateway
+docker logs gym-crm-service
+docker logs training-hours-tracker
+
+
+
