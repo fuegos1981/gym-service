@@ -97,8 +97,8 @@ services:
       - STG_DB_URL=jdbc:mysql://mysql-db:3306/gym
       - DB_URL=jdbc:mysql://mysql-db:3306/gym
       - STG_BROKER_URL=tcp://activemq:61616
-      - DB_USERNAME=root
-      - DB_PASSWORD=root
+      - DB_USERNAME=gym
+      - DB_PASSWORD=gym
 
   training-hours-tracker:
     build: ./training-hours-tracker
